@@ -1,19 +1,19 @@
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import CandidateSidebar from "@/components/CandidateSidebar";
+import { requireCandidate } from "@/lib/auth/session";
 
-export default async function CandidateDashboardLayout({ children }: { children: React.ReactNode }) {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
+export default async function CandidateDashboardLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    await requireCandidate()
+    return (
+        <div className="min-h-screen w-full bg-slate-50 flex">
+            <CandidateSidebar />
 
-    if (!session) {
-        redirect("/auth/candidate/login");
-    }
-
-    return(
-        <div className="min-h-screen w-full bg-slate-50 flex flex-col items-center justify-center">
-            {children}
+            <main className="flex-1 p-6">
+                {children}
+            </main>
         </div>
-    )
+    );
 }

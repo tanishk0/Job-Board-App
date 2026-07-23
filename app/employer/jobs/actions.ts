@@ -2,7 +2,7 @@
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { db } from "@/lib/db"
-import { jobPostings } from "@/db/schema"
+import { jobPostings, employerProfiles } from "@/db/schema"
 import { redirect } from "next/navigation"
 import { eq, and} from "drizzle-orm"
 
@@ -19,6 +19,17 @@ export async function createJob(formData: FormData) {
     if (session.user.role !== "employer") {
         throw new Error("Forbidden(Account Role Mismatched)");
     }
+
+    const employerProfile = await db
+    .select()
+    .from(employerProfiles)
+    .where(eq(employerProfiles.userId, session.user.id))
+    .limit(1);
+    
+    if (employerProfile.length === 0) {
+        throw new Error("Employer profile not found");
+    }
+    
 
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
@@ -136,4 +147,33 @@ export async function updateJob(formData: FormData) {
         );
 
     redirect("/employer/jobs");
+}
+
+
+export async function deleteJob(formData: FormData){
+    const id = formData.get("id") as string;
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
+    if (!session) {
+        throw new Error("Unauthorized");
+    }
+
+    if (session.user.role !== "employer") {
+        throw new Error("Forbidden(Account Role Mismatched)");
+    }
+
+    const employerId = session.user.id;
+
+    await db
+        .delete(jobPostings)
+        .where(
+            and(
+                eq(jobPostings.id, id),
+                eq(jobPostings.employerId, employerId)
+            )
+        );
+
+    redirect("/employer/jobs") ;
 }

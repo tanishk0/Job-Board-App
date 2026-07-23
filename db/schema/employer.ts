@@ -12,7 +12,7 @@ export const employerProfiles = pgTable("employer_profiles", {
     companyName: text("company_name").notNull(),
     companyDescription: text("company_description"),
     companyLogoUrl: text("company_logo_url"),
-
+    
     website: text("website"),
     location: text("location"),
     contactEmail: text("contact_email"),
