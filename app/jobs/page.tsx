@@ -1,10 +1,33 @@
 import { getJobs } from "./action";
 import JobCard from "./JobCard";
+import SearchBar from "@/components/SearchBar";
 import Link from "next/link";
-import { Briefcase, Sparkles, ArrowLeft, Search } from "lucide-react";
+import { Briefcase, Sparkles, ArrowLeft } from "lucide-react";
 
-export default async function JobsPage() {
-  const jobs = await getJobs();
+export default async function JobsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    q?: string;
+    location?: string;
+    minSalary?: string;
+    experienceLevel?: string;
+    jobType?: string;
+  }>;
+}) {
+  const { q, location, minSalary, experienceLevel, jobType } = await searchParams;
+
+  const jobs = await getJobs({
+    q,
+    location,
+    minSalary,
+    experienceLevel,
+    jobType,
+  });
+
+  const hasActiveFilters = Boolean(
+    q || location || (minSalary && Number(minSalary) > 0) || experienceLevel || jobType
+  );
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-16 selection:bg-[#F79256]/20 selection:text-[#F79256]">
@@ -33,7 +56,7 @@ export default async function JobsPage() {
       {/* Main Container */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
         {/* Page Header */}
-        <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4">
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F79256]/10 text-[#F79256] text-xs font-semibold uppercase tracking-wider">
@@ -49,10 +72,51 @@ export default async function JobsPage() {
             </div>
 
             <div className="px-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shrink-0 self-start sm:self-center">
-              {jobs.length} Open Position{jobs.length === 1 ? "" : "s"}
+              {jobs.length} Position{jobs.length === 1 ? "" : "s"} Found
             </div>
           </div>
+
+          {/* Reusable Search Bar & Filters Component */}
+          <SearchBar />
         </div>
+
+        {/* Active Search Summary */}
+        {hasActiveFilters && (
+          <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600 px-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span>Showing results for:</span>
+              {q && (
+                <span className="px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-900">
+                  Keyword: "{q}"
+                </span>
+              )}
+              {location && (
+                <span className="px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-900">
+                  Location: "{location}"
+                </span>
+              )}
+              {minSalary && Number(minSalary) > 0 && (
+                <span className="px-2.5 py-1 bg-emerald-50 border border-emerald-200 rounded-lg text-xs font-bold text-emerald-800">
+                  Min Salary: ₹{minSalary} LPA+
+                </span>
+              )}
+              {experienceLevel && (
+                <span className="px-2.5 py-1 bg-blue-50 border border-blue-200 rounded-lg text-xs font-bold text-blue-800 capitalize">
+                  Exp: {experienceLevel}
+                </span>
+              )}
+              {jobType && (
+                <span className="px-2.5 py-1 bg-orange-50 border border-orange-200 rounded-lg text-xs font-bold text-orange-800">
+                  Type: {jobType}
+                </span>
+              )}
+            </div>
+
+            <Link href="/jobs" className="text-xs font-bold text-[#F79256] hover:underline">
+              Reset Filters
+            </Link>
+          </div>
+        )}
 
         {/* Jobs List */}
         {jobs.length === 0 ? (
@@ -60,10 +124,18 @@ export default async function JobsPage() {
             <div className="w-16 h-16 rounded-2xl bg-orange-50 text-[#F79256] mx-auto flex items-center justify-center">
               <Briefcase className="w-8 h-8" />
             </div>
-            <h2 className="text-xl font-bold text-slate-900">No jobs posted yet</h2>
+            <h2 className="text-xl font-bold text-slate-900">No matching jobs found</h2>
             <p className="text-sm text-slate-500 max-w-md mx-auto">
-              There are currently no active job listings. Please check back later!
+              We couldn't find any job listings matching your search criteria. Try adjusting your query or filters.
             </p>
+            {hasActiveFilters && (
+              <Link
+                href="/jobs"
+                className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#F79256] hover:bg-[#e07e42] text-white font-semibold text-xs rounded-xl transition-all shadow-sm"
+              >
+                Clear Search Filters
+              </Link>
+            )}
           </div>
         ) : (
           <div className="space-y-4">
