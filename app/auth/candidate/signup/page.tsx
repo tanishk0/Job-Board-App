@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function CandidateSignupPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -103,6 +105,7 @@ export default function CandidateSignupPage() {
       email: formData.email,
       password: formData.password,
       role: "candidate",
+      callbackURL: "/candidate",
     });
 
     setIsSubmitting(false);
@@ -113,6 +116,7 @@ export default function CandidateSignupPage() {
     }
 
     setSubmitSuccess(true);
+    router.push("/candidate");
   };
 
   const getPasswordStrength = () => {
@@ -182,14 +186,11 @@ export default function CandidateSignupPage() {
             </p>
             <button
               onClick={() => {
-                setSubmitSuccess(false);
-                setFormData({ name: "", email: "", password: "" });
-                setTouched({ name: false, email: false, password: false });
-                setErrors({});
+                router.push("/candidate");
               }}
               className="mt-4 px-6 py-2 rounded-md bg-[#FF8811] text-white font-medium hover:bg-[#e0770f] transition-all"
             >
-              Reset Form
+              Go to Dashboard
             </button>
           </div>
         ) : (
@@ -197,6 +198,12 @@ export default function CandidateSignupPage() {
             {/* Google Signup Button */}
             <button
               type="button"
+              onClick={async () => {
+                await authClient.signIn.social({
+                  provider: "google",
+                  callbackURL: "/candidate",
+                });
+              }}
               className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-zinc-800/80 hover:bg-zinc-800 border border-zinc-700/80 rounded-md font-medium text-sm text-zinc-200 transition-all hover:border-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#FF8811]"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">

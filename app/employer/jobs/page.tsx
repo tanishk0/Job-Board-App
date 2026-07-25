@@ -1,13 +1,12 @@
 import { getEmployerJobs } from "./actions";
 import { deleteJob } from "./actions";
 import Link from "next/link";
-import { employerProfiles } from "@/db/schema";
+import { employerProfiles, applications } from "@/db/schema";
 import { db } from "@/lib/db";
-import { eq } from "drizzle-orm";
-import { auth } from "@/lib/auth"
+import { eq, count } from "drizzle-orm";
+import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-
-
+import { Users } from "lucide-react";
 
 export default async function Jobs() {
     const jobs = await getEmployerJobs();
@@ -49,6 +48,20 @@ export default async function Jobs() {
         );
     }
 
+    // Fetch applicant counts for employer's jobs
+    const applicantCounts = await db
+        .select({
+            jobId: applications.jobId,
+            applicantCount: count(applications.id),
+        })
+        .from(applications)
+        .groupBy(applications.jobId);
+
+    const countsMap = new Map<string, number>();
+    applicantCounts.forEach((row) => {
+        countsMap.set(row.jobId, Number(row.applicantCount));
+    });
+
     return (
         <div className="max-w-4xl mx-auto p-4">
             <div className="flex justify-between items-center mb-6">
@@ -67,44 +80,57 @@ export default async function Jobs() {
                         <p className="text-slate-600">You haven't posted any jobs yet.</p>
                     </div>
                 ) : (
-                    jobs.map((job) => (
-                        <div
-                            key={job.id}
-                            className="bg-white border border-slate-200 rounded-md shadow-sm p-5 hover:border-orange-300 hover:shadow-md transition-all"
-                        >
-                            <div className="flex justify-between items-start mb-3">
-                                <div>
-                                    <h2 className="text-xl font-bold text-slate-900">{job.title}</h2>
-                                    <p className="text-sm text-slate-600">{job.location}</p>
+                    jobs.map((job) => {
+                        const applicantCount = countsMap.get(job.id) || 0;
+                        return (
+                            <div
+                                key={job.id}
+                                className="bg-white border border-slate-200 rounded-md shadow-sm p-5 hover:border-orange-300 hover:shadow-md transition-all"
+                            >
+                                <div className="flex justify-between items-start mb-3">
+                                    <div>
+                                        <h2 className="text-xl font-bold text-slate-900">{job.title}</h2>
+                                        <p className="text-sm text-slate-600">{job.location}</p>
+                                    </div>
+                                    <span className="px-2 py-1 bg-slate-100 text-slate-700 text-xs rounded">
+                                        {job.jobType}
+                                    </span>
                                 </div>
-                                <span className="px-2 py-1 bg-slate-100 text-slate-700 text-xs rounded">
-                                    {job.jobType}
-                                </span>
-                            </div>
 
-                            <p className="text-sm text-slate-600 mb-3 line-clamp-2">{job.description}</p>
+                                <p className="text-sm text-slate-600 mb-3 line-clamp-2">{job.description}</p>
 
-                            <div className="flex items-center gap-3 text-sm text-slate-700 mb-3">
-                                <span>• {job.experienceLevel?.toUpperCase()}</span>
-                                <span>• {job.salary}</span>
-                            </div>
+                                <div className="flex items-center gap-3 text-sm text-slate-700 mb-3">
+                                    <span>• {job.experienceLevel?.toUpperCase()}</span>
+                                    <span>• {job.salary}</span>
+                                </div>
 
-                            <div className="flex justify-end items-center gap-4">
-                                <Link
-                                    href={`/employer/jobs/${job.id}/edit`}
-                                    className="text-sm text-orange-500 hover:text-orange-600 font-medium"
-                                >
-                                    Edit Job
-                                </Link>
-                                <form action={deleteJob}>
-                                    <input type="hidden" name="id" value={job.id} />
-                                    <button className="text-sm text-red-500 hover:text-red-600 font-medium cursor-pointer">
-                                        Delete Job
-                                    </button>
-                                </form>
+                                <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+                                    <Link
+                                        href={`/employer/jobs/${job.id}/applicants`}
+                                        className="text-sm font-semibold text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 border border-orange-200/80 px-3 py-1.5 rounded-lg inline-flex items-center gap-2 transition-colors"
+                                    >
+                                        <Users className="w-4 h-4" />
+                                        <span>View Applicants ({applicantCount})</span>
+                                    </Link>
+
+                                    <div className="flex items-center gap-4">
+                                        <Link
+                                            href={`/employer/jobs/${job.id}/edit`}
+                                            className="text-sm text-orange-500 hover:text-orange-600 font-medium"
+                                        >
+                                            Edit Job
+                                        </Link>
+                                        <form action={deleteJob}>
+                                            <input type="hidden" name="id" value={job.id} />
+                                            <button className="text-sm text-red-500 hover:text-red-600 font-medium cursor-pointer">
+                                                Delete Job
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    ))
+                        );
+                    })
                 )}
             </div>
         </div>

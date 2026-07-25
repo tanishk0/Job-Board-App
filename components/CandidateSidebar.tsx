@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { UserCircle, Briefcase, FileText } from "lucide-react";
+import { UserCircle, Briefcase, FileText, Bookmark } from "lucide-react";
 
 export default function CandidateSidebar() {
     return (
@@ -29,6 +29,13 @@ export default function CandidateSidebar() {
                 >
                     <FileText className="w-6 h-6 mr-2" color="#F79256" />
                     My Applications
+                </Link>
+                <Link
+                    href="/candidate/saved-jobs"
+                    className="flex items-center px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 font-medium text-sm transition-colors"
+                >
+                    <Bookmark className="w-6 h-6 mr-2" color="#F79256" />
+                    Saved Jobs
                 </Link>
             </nav>
         </aside>

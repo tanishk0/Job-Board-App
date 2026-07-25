@@ -1,60 +1,80 @@
-import { MapPin, DollarSign, Bookmark, Building2 } from "lucide-react";
+import { MapPin, DollarSign, Building2, Briefcase, Sparkles, ArrowRight } from "lucide-react";
 
 type JobCardProps = {
-    job: {
-        id: string;
-        title: string;
-        salary: string | null;
-        experienceLevel: string | null;
-        location: string | null;
-        jobType: string | null;
-        companyName: string;
-        companyLogoUrl: string | null;
-    };
+  job: {
+    id: string;
+    title: string;
+    salary: string | null;
+    experienceLevel: string | null;
+    location: string | null;
+    jobType: string | null;
+    companyName: string;
+    companyLogoUrl: string | null;
+  };
 };
 
 export default function JobCard({ job }: JobCardProps) {
-    console.log(job.companyLogoUrl);
-    return (
-        <div className="jobCard h-60 w-full md:w-[80%] mt-4 bg-white text-slate-900 rounded-xl border border-slate-200 p-6 sm:p-8 flex flex-col sm:flex-row justify-between gap-6 shadow-sm hover:shadow-md hover:border-[#F79256]/60 transition-all duration-200">
-            <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-slate-200 text-slate-900 flex p-2 flex-shrink-0 items-center justify-center font-bold border border-slate-300">
-                    <img
-                        src={job.companyLogoUrl ?? "/default-company-logo.png"}
-                        alt={job.companyName}
-                        
-                    />
+  return (
+    <div className="w-full bg-white text-slate-900 rounded-2xl border border-slate-200/80 p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-6 shadow-sm hover:shadow-md hover:border-[#F79256]/50 transition-all duration-200 group">
+      <div className="flex items-start gap-4 flex-1">
+        {job.companyLogoUrl ? (
+          <img
+            src={job.companyLogoUrl}
+            alt={job.companyName}
+            className="w-14 h-14 rounded-xl border border-slate-200 object-contain p-1.5 bg-white shrink-0"
+          />
+        ) : (
+          <div className="w-14 h-14 rounded-xl border border-slate-200 bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-lg shrink-0">
+            {job.companyName?.slice(0, 2).toUpperCase() || "JB"}
+          </div>
+        )}
 
-                </div>
-                <div className="space-y-3 flex flex-col justify-between h-full">
-                    <div className="flex flex-col">
-                        <h1 className="text-xl font-bold text-slate-900">{job.title}</h1>
-                        <p className="text-slate-500 text-sm font-medium">{job.companyName}</p>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-3">
-                        <div className="flex items-center text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/80">
-                            <MapPin className="w-4 h-4 text-[#F79256]" />
-                            <p className="ml-1">{job.location}</p>
-                        </div>
-                        <div className="flex items-center text-xs font-medium text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200/80">
-                            <DollarSign className="w-4 h-4 text-emerald-600" />
-                            <p className="ml-0.5">{job.salary}</p>
-                        </div>
-                    </div>
-                    <div className="flex items-center text-sm font-medium text-slate-900">
-                        <p className="ml-1">{job.experienceLevel}</p>
-                    </div>
-                </div>
+        <div className="space-y-2 flex-1">
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 group-hover:text-[#F79256] transition-colors leading-snug">
+              {job.title}
+            </h2>
+            <div className="flex items-center gap-1.5 text-sm font-medium text-slate-600 mt-0.5">
+              <Building2 className="w-4 h-4 text-slate-400" />
+              <span>{job.companyName}</span>
             </div>
-            <div className="flex items-start flex-col justify-between">
-                <p className="text-xs font-semibold text-[#F79256] bg-[#F79256]/10 px-3 py-1.5 rounded-full border border-[#F79256]/20 uppercase tracking-wider">
-                    {job.jobType}
-                </p>
-                <div className="flex items-center cursor-pointer hover:bg-slate-100/80 transition-colors pt-1">
-                    <Bookmark color="#F79256" size={24} />
-                    <p className="ml-1 text-sm text-slate-500">Save this job</p>
-                </div>
-            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5 pt-1">
+            {job.location && (
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/80">
+                <MapPin className="w-3.5 h-3.5 text-[#F79256]" />
+                {job.location}
+              </span>
+            )}
+
+            {job.salary && (
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200/80">
+                <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
+                {job.salary}
+              </span>
+            )}
+
+            {job.experienceLevel && (
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200/80">
+                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+                {job.experienceLevel}
+              </span>
+            )}
+          </div>
         </div>
-    );
+      </div>
+
+      <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-4 shrink-0 border-t sm:border-t-0 pt-4 sm:pt-0 border-slate-100">
+        <span className="text-xs font-semibold text-[#F79256] bg-[#F79256]/10 px-3.5 py-1.5 rounded-full border border-[#F79256]/20 uppercase tracking-wider">
+          {job.jobType || "Full-Time"}
+        </span>
+
+        <span className="inline-flex items-center gap-1 text-xs font-bold text-slate-700 group-hover:text-[#F79256] transition-colors">
+          <span>View Job Details</span>
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+        </span>
+      </div>
+    </div>
+  );
 }

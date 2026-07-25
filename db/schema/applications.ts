@@ -15,7 +15,7 @@ export const applications = pgTable("applications", {
 
     coverLetter: text("cover_letter"),
     resumeUrl: text("resume_url"),
-    status: text("status").notNull().default("pending"),
+    status: text("status").notNull().default("pending"), 
 
     appliedAt: timestamp("applied_at").defaultNow(),
 

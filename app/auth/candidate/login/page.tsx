@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function CandidateLoginPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -77,23 +79,25 @@ export default function CandidateLoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-        if (!validateForm()) return;
-    
-        setIsSubmitting(true);
-    
-        const { error } = await authClient.signIn.email({
-          email: formData.email,
-          password: formData.password,
-        });
-    
-        setIsSubmitting(false);
-    
-        if (error) {
-          console.log(error);
-          return;
-        }
-    
-        setSubmitSuccess(true);
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+
+    const { error } = await authClient.signIn.email({
+      email: formData.email,
+      password: formData.password,
+      callbackURL: "/candidate",
+    });
+
+    setIsSubmitting(false);
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    setSubmitSuccess(true);
+    router.push("/candidate");
   };
 
   return (
@@ -127,21 +131,25 @@ export default function CandidateLoginPage() {
             </p>
             <button
               onClick={() => {
-                setSubmitSuccess(false);
-                setFormData({ email: "", password: "" });
-                setTouched({ email: false, password: false });
-                setErrors({});
+                router.push("/candidate");
               }}
               className="mt-4 px-6 py-2 rounded-md bg-[#FF8811] text-white font-medium hover:bg-[#e0770f] transition-all"
             >
-              Back
+              Go to Dashboard
             </button>
           </div>
+          
         ) : (
           <>
             {/* Google Login Button */}
             <button
               type="button"
+              onClick={async () => {
+                await authClient.signIn.social({
+                  provider: "google",
+                  callbackURL: "/candidate",
+                });
+              }}
               className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-zinc-800/80 hover:bg-zinc-800 border border-zinc-700/80 rounded-md font-medium text-sm text-zinc-200 transition-all hover:border-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#FF8811]"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -289,5 +297,6 @@ export default function CandidateLoginPage() {
         </div>
       </div>
     </main>
+    
   );
 }
