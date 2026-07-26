@@ -12,7 +12,7 @@ export default function Home() {
               <Briefcase className="w-5 h-5" />
             </div>
             <span className="text-xl font-bold tracking-tight text-slate-900">
-              Job<span className="text-[#F79256]">Board</span>
+              Talen<span className="text-[#F79256]">try</span>
             </span>
           </Link>
 
@@ -210,7 +210,7 @@ export default function Home() {
             <div className="w-6 h-6 rounded-md bg-[#F79256] text-white flex items-center justify-center font-bold text-xs">
               <Briefcase className="w-3.5 h-3.5" />
             </div>
-            <span className="text-sm font-bold text-slate-900">JobBoard</span>
+            <span className="text-sm font-bold text-slate-900">Talentry</span>
           </div>
 
           <div className="flex items-center gap-6">
@@ -219,7 +219,7 @@ export default function Home() {
             <Link href="/employer/jobs" className="hover:text-[#F79256] transition-colors">Employer</Link>
           </div>
 
-          <p>© {new Date().getFullYear()} JobBoard. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Talentry. All rights reserved.</p>
         </div>
       </footer>
     </div>

@@ -10,7 +10,7 @@ export default function GuestSidebar() {
             <Briefcase className="w-4 h-4" />
           </div>
           <span className="text-lg font-bold tracking-tight text-slate-900">
-            Job<span className="text-[#F79256]">Board</span>
+            Talen<span className="text-[#F79256]">try</span>
           </span>
         </Link>
       </div>

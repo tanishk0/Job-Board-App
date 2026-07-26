@@ -11,7 +11,7 @@ export default function AuthPage() {
             <Briefcase className="w-5 h-5" />
           </div>
           <span className="text-xl font-bold tracking-tight text-white">
-            Job<span className="text-[#F79256]">Board</span>
+            Talen<span className="text-[#F79256]">try</span>
           </span>
         </Link>
 
@@ -34,7 +34,7 @@ export default function AuthPage() {
             How would you like to continue?
           </h1>
           <p className="text-base sm:text-lg text-zinc-400">
-            Select your role to log in or create a new account on JobBoard.
+            Select your role to log in or create a new account on Talentry.
           </p>
         </div>
 
@@ -120,7 +120,7 @@ export default function AuthPage() {
 
       {/* Bottom Footer */}
       <div className="max-w-6xl w-full mx-auto text-center py-4 text-xs text-zinc-500">
-        © {new Date().getFullYear()} JobBoard. All rights reserved.
+        © {new Date().getFullYear()} Talentry. All rights reserved.
       </div>
     </main>
   );
