@@ -2,35 +2,46 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-
-export async function requireAuth(){
-    const session = await auth.api.getSession({
+export async function getSession() {
+    return await auth.api.getSession({
         headers: await headers()
-    })
+    });
+}
+
+export async function requireAuth() {
+    const session = await getSession();
 
     if (!session) {
-        redirect("/login")
+        redirect("/auth");
     }
 
-    return session
+    return session;
 }
 
-export async function requireEmployer(){
-    const session = await requireAuth()
-    
-    if(session.user.role !== "employer"){
-        throw new Error("Not an employer"); 
+export async function requireEmployer() {
+    const session = await getSession();
+
+    if (!session) {
+        redirect("/auth/employer/login");
     }
-        
-    return session
+
+    if (session.user.role !== "employer") {
+        redirect("/auth/employer/login");
+    }
+
+    return session;
 }
 
-export async function requireCandidate(){
-    const session = await requireAuth()
-    
-    if(session.user.role !== "candidate"){
-        throw new Error("Not a candidate"); 
+export async function requireCandidate() {
+    const session = await getSession();
+
+    if (!session) {
+        redirect("/auth/candidate/login");
     }
-        
-    return session
+
+    if (session.user.role !== "candidate") {
+        redirect("/auth/candidate/login");
+    }
+
+    return session;
 }

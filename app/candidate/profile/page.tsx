@@ -1,5 +1,4 @@
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { requireCandidate } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { candidateProfiles } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -7,13 +6,7 @@ import { eq } from "drizzle-orm";
 import CandidateProfile from "./CandidateProfile";
 
 export default async function ProfilePage() {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
-
-    if (!session) {
-        return <div>Unauthorized</div>;
-    }
+    const session = await requireCandidate();
 
     const profile = await db
         .select()

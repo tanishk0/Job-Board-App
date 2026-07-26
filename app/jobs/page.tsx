@@ -3,6 +3,8 @@ import JobCard from "./JobCard";
 import SearchBar from "@/components/SearchBar";
 import Link from "next/link";
 import { Briefcase, Sparkles, ArrowLeft } from "lucide-react";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export default async function JobsPage({
   searchParams,
@@ -16,6 +18,24 @@ export default async function JobsPage({
   }>;
 }) {
   const { q, location, minSalary, experienceLevel, jobType } = await searchParams;
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const dashboardHref =
+    session?.user?.role === "employer"
+      ? "/employer"
+      : session?.user?.role === "candidate"
+      ? "/candidate"
+      : "/";
+
+  const dashboardLabel =
+    session?.user?.role === "employer"
+      ? "Employer Dashboard"
+      : session?.user?.role === "candidate"
+      ? "Candidate Dashboard"
+      : "Home";
 
   const jobs = await getJobs({
     q,
@@ -44,11 +64,11 @@ export default async function JobsPage({
           </Link>
 
           <Link
-            href="/candidate/profile"
+            href={dashboardHref}
             className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#F79256] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Dashboard</span>
+            <span>{dashboardLabel}</span>
           </Link>
         </div>
       </header>

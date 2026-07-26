@@ -1,7 +1,20 @@
 import Link from "next/link";
-import { Briefcase, Building2, Search, ArrowRight, CheckCircle2, Users, Sparkles, UserCheck } from "lucide-react";
+import { Briefcase, Building2, Search, ArrowRight, CheckCircle2, Users, Sparkles, UserCheck, LayoutDashboard } from "lucide-react";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const isEmployer = session?.user?.role === "employer";
+  const isCandidate = session?.user?.role === "candidate";
+
+  const employerDashboardHref = isEmployer ? "/employer" : "/auth/employer/login";
+  const postJobHref = isEmployer ? "/employer/jobs/new" : "/auth/employer/login";
+  const candidateDashboardHref = isCandidate ? "/candidate" : "/auth/candidate/login";
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans selection:bg-[#F79256]/20 selection:text-[#F79256]">
       {/* Navigation Header */}
@@ -20,21 +33,32 @@ export default function Home() {
             <Link href="/jobs" className="hover:text-[#F79256] transition-colors">
               Browse Jobs
             </Link>
-            <Link href="/candidate" className="hover:text-[#F79256] transition-colors">
+            <Link href={candidateDashboardHref} className="hover:text-[#F79256] transition-colors">
               Candidates
             </Link>
-            <Link href="/employer/jobs" className="hover:text-[#F79256] transition-colors">
+            <Link href={employerDashboardHref} className="hover:text-[#F79256] transition-colors">
               Employers
             </Link>
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link
-              href="/auth/candidate/login"
-              className="text-sm font-medium text-slate-700 hover:text-[#F79256] px-3 py-2 rounded-lg transition-colors hidden sm:block"
-            >
-              Sign In
-            </Link>
+            {session ? (
+              <Link
+                href={isEmployer ? "/employer" : "/candidate"}
+                className="inline-flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-[#F79256] px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200/70 border border-slate-200 transition-colors"
+              >
+                <LayoutDashboard className="w-4 h-4 text-[#F79256]" />
+                <span>Dashboard</span>
+              </Link>
+            ) : (
+              <Link
+                href="/auth"
+                className="text-sm font-medium text-slate-700 hover:text-[#F79256] px-3 py-2 rounded-lg transition-colors hidden sm:block"
+              >
+                Sign In
+              </Link>
+            )}
+
             <Link
               href="/jobs"
               className="px-4 py-2 bg-[#F79256] hover:bg-[#e07e42] text-white text-sm font-semibold rounded-lg shadow-sm hover:shadow transition-all inline-flex items-center gap-1.5"
@@ -77,7 +101,7 @@ export default function Home() {
               </Link>
 
               <Link
-                href="/employer/jobs"
+                href={postJobHref}
                 className="w-full sm:w-auto px-8 py-3.5 bg-white border border-slate-300 hover:border-[#F79256] text-slate-700 hover:text-[#F79256] text-base font-semibold rounded-xl shadow-xs hover:shadow-sm transition-all inline-flex items-center justify-center gap-2"
               >
                 <Building2 className="w-5 h-5 text-[#F79256]" />
@@ -117,16 +141,18 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Card 1 */}
-              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-[#F79256]/50 shadow-xs hover:shadow-md transition-all space-y-4">
-                <div className="w-12 h-12 rounded-xl bg-[#F79256]/10 text-[#F79256] flex items-center justify-center font-bold">
-                  <UserCheck className="w-6 h-6" />
+              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-[#F79256]/50 shadow-xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-xl bg-[#F79256]/10 text-[#F79256] flex items-center justify-center font-bold">
+                    <UserCheck className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900">For Candidates</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    Browse structured job cards complete with salary ranges, experience levels, and direct company profile insights.
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-slate-900">For Candidates</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">
-                  Browse structured job cards complete with salary ranges, experience levels, and direct company profile insights.
-                </p>
                 <Link
-                  href="/candidate"
+                  href={candidateDashboardHref}
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#F79256] hover:text-[#e07e42] pt-2"
                 >
                   Candidate Portal
@@ -135,16 +161,18 @@ export default function Home() {
               </div>
 
               {/* Card 2 */}
-              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-[#F79256]/50 shadow-xs hover:shadow-md transition-all space-y-4">
-                <div className="w-12 h-12 rounded-xl bg-[#F79256]/10 text-[#F79256] flex items-center justify-center font-bold">
-                  <Building2 className="w-6 h-6" />
+              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-[#F79256]/50 shadow-xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-xl bg-[#F79256]/10 text-[#F79256] flex items-center justify-center font-bold">
+                    <Building2 className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900">For Employers</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    Manage company profiles, post job descriptions, track applicants, and discover qualified candidates easily.
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-slate-900">For Employers</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">
-                  Manage company profiles, post job descriptions, track applicants, and discover qualified candidates easily.
-                </p>
                 <Link
-                  href="/employer/jobs"
+                  href={employerDashboardHref}
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#F79256] hover:text-[#e07e42] pt-2"
                 >
                   Employer Dashboard
@@ -153,14 +181,16 @@ export default function Home() {
               </div>
 
               {/* Card 3 */}
-              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-[#F79256]/50 shadow-xs hover:shadow-md transition-all space-y-4">
-                <div className="w-12 h-12 rounded-xl bg-[#F79256]/10 text-[#F79256] flex items-center justify-center font-bold">
-                  <Users className="w-6 h-6" />
+              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-[#F79256]/50 shadow-xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-xl bg-[#F79256]/10 text-[#F79256] flex items-center justify-center font-bold">
+                    <Users className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900">Streamlined Workflow</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    Experience a clean interface designed to minimize friction for both job applications and active postings.
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-slate-900">Streamlined Workflow</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">
-                  Experience a clean interface designed to minimize friction for both job applications and active postings.
-                </p>
                 <Link
                   href="/jobs"
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#F79256] hover:text-[#e07e42] pt-2"
@@ -193,10 +223,10 @@ export default function Home() {
                 Search Jobs
               </Link>
               <Link
-                href="/auth/candidate/signup"
+                href={session ? (isEmployer ? "/employer" : "/candidate") : "/auth"}
                 className="w-full sm:w-auto px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 text-sm font-semibold rounded-xl transition-all text-center"
               >
-                Create Account
+                {session ? "Go to Dashboard" : "Create Account"}
               </Link>
             </div>
           </div>
@@ -215,8 +245,8 @@ export default function Home() {
 
           <div className="flex items-center gap-6">
             <Link href="/jobs" className="hover:text-[#F79256] transition-colors">Jobs</Link>
-            <Link href="/candidate" className="hover:text-[#F79256] transition-colors">Candidate</Link>
-            <Link href="/employer/jobs" className="hover:text-[#F79256] transition-colors">Employer</Link>
+            <Link href={candidateDashboardHref} className="hover:text-[#F79256] transition-colors">Candidate</Link>
+            <Link href={employerDashboardHref} className="hover:text-[#F79256] transition-colors">Employer</Link>
           </div>
 
           <p>© {new Date().getFullYear()} Talentry. All rights reserved.</p>
