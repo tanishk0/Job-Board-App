@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function EmployerLoginPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -84,6 +86,7 @@ export default function EmployerLoginPage() {
     const { error } = await authClient.signIn.email({
       email: formData.email,
       password: formData.password,
+      callbackURL: "/employer",
     });
 
     setIsSubmitting(false);
@@ -94,6 +97,8 @@ export default function EmployerLoginPage() {
     }
 
     setSubmitSuccess(true);
+    router.push("/employer");
+    router.refresh();
   };
 
   return (

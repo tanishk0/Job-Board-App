@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function EmployerSignupPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     companyName: "",
     fullName: "",
@@ -29,6 +31,7 @@ export default function EmployerSignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [serverError, setServerError] = useState("");
 
   const validateField = (field: string, value: string) => {
     let error = "";
@@ -107,25 +110,29 @@ export default function EmployerSignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-        if (!validateForm()) return;
-    
-        setIsSubmitting(true);
-    
-        const { error } = await authClient.signUp.email({
-          name: formData.fullName,
-          email: formData.email,
-          password: formData.password,
-          role: "employer",
-        });
-    
-        setIsSubmitting(false);
-    
-        if (error) {
-          console.log(error);
-          return;
-        }
-    
-        setSubmitSuccess(true);
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    setServerError("");
+
+    const { error } = await authClient.signUp.email({
+      name: formData.fullName,
+      email: formData.email,
+      password: formData.password,
+      role: "employer",
+      callbackURL: "/employer",
+    });
+
+    setIsSubmitting(false);
+
+    if (error) {
+      setServerError(error.message || "Failed to create employer account. Please try again.");
+      return;
+    }
+
+    setSubmitSuccess(true);
+    router.push("/employer");
+    router.refresh();
   };
 
   const getPasswordStrength = () => {
@@ -196,21 +203,33 @@ export default function EmployerSignupPage() {
             </p>
             <button
               onClick={() => {
-                setSubmitSuccess(false);
-                setFormData({ companyName: "", fullName: "", email: "", password: "" });
-                setTouched({ companyName: false, fullName: false, email: false, password: false });
-                setErrors({});
+                router.push("/employer");
               }}
               className="mt-4 px-6 py-2 rounded-md bg-[#FF8811] text-white font-medium hover:bg-[#e0770f] transition-all"
             >
-              Reset Form
+              Go to Dashboard
             </button>
           </div>
         ) : (
           <>
+            {serverError && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-md text-red-400 text-xs flex items-center gap-2">
+                <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <span>{serverError}</span>
+              </div>
+            )}
+
             {/* Google Signup Button */}
             <button
               type="button"
+              onClick={async () => {
+                await authClient.signIn.social({
+                  provider: "google",
+                  callbackURL: "/employer",
+                });
+              }}
               className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-zinc-800/80 hover:bg-zinc-800 border border-zinc-700/80 rounded-md font-medium text-sm text-zinc-200 transition-all hover:border-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#FF8811]"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
