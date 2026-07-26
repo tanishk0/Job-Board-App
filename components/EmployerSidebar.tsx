@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { UserCircle, Briefcase, PlusCircle, Search } from "lucide-react";
+import { UserCircle, Briefcase, PlusCircle, UserRoundSearch } from "lucide-react";
 
 export default function EmployerSidebar() {
     return (
@@ -24,11 +24,11 @@ export default function EmployerSidebar() {
                     My Job Postings
                 </Link>
                 <Link
-                    href="/jobs"
+                    href="/employer/candidates"
                     className="flex items-center px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 font-medium text-sm transition-colors"
                 >
-                    <Search className="w-5 h-5 mr-2 text-[#F79256]" />
-                    Browse Jobs
+                    <UserRoundSearch className="w-5 h-5 mr-2 text-[#F79256]" />
+                    Search Talent
                 </Link>
                 <Link
                     href="/employer/jobs/new"
