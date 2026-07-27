@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Upload, FileText, CheckCircle, Loader2, Send } from "lucide-react";
 import { useUploadThing } from "@/src/utils/uploadthing";
+import { Button } from "@/components/ui/Button";
 
 type Props = {
   jobId: string;
@@ -46,14 +47,14 @@ export default function ApplicationForm({
   };
 
   return (
-    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
+    <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-xs space-y-6">
       <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
-        <div className="w-10 h-10 rounded-xl bg-[#F79256]/10 text-[#F79256] flex items-center justify-center">
+        <div className="w-10 h-10 rounded-lg bg-[#008DD5]/10 text-[#008DD5] flex items-center justify-center">
           <Send className="w-5 h-5" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Apply for this Position</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-xl font-bold text-[#0E103D]">Apply for this Position</h2>
+          <p className="text-xs text-[#313638]/70">
             Attach a resume and optional cover letter to submit your application directly to {companyName}.
           </p>
         </div>
@@ -65,12 +66,11 @@ export default function ApplicationForm({
 
         {/* Resume Selection & Upload Section */}
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-sm font-semibold text-[#0E103D]">
             Resume <span className="text-red-500">*</span>
           </label>
 
-          {/* Option A & B Box */}
-          <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/60 space-y-3">
+          <div className="border border-slate-200 rounded-lg p-4 bg-slate-50/50 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <label className="cursor-pointer inline-flex items-center gap-2">
                 <input
@@ -80,10 +80,10 @@ export default function ApplicationForm({
                   onChange={handleFileChange}
                   className="hidden"
                 />
-                <span className="px-4 py-2 bg-[#F79256] hover:bg-[#e07e42] disabled:opacity-50 text-white font-semibold text-xs rounded-lg transition-colors inline-flex items-center gap-2 shadow-xs cursor-pointer">
+                <Button type="button" variant="primary" size="sm" disabled={isUploading} className="pointer-events-none">
                   <Upload className="w-4 h-4" />
                   <span>{isUploading ? "Uploading file..." : "Upload Local Resume (PDF/DOC)"}</span>
-                </span>
+                </Button>
               </label>
 
               {prefilledResume && !isUploaded && (
@@ -94,7 +94,7 @@ export default function ApplicationForm({
             </div>
 
             {/* Direct URL input option */}
-            <div className="space-y-1 pt-2 border-t border-slate-200/80">
+            <div className="space-y-1 pt-2 border-t border-slate-200">
               <label htmlFor="resumeUrlInput" className="text-xs text-slate-500 font-medium">
                 Or enter / edit Resume URL:
               </label>
@@ -108,13 +108,13 @@ export default function ApplicationForm({
                   setIsUploaded(false);
                 }}
                 placeholder="https://example.com/my-resume.pdf"
-                className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#F79256]/50 focus:border-[#F79256] text-xs text-slate-900 bg-white"
+                className="w-full px-3.5 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#008DD5] focus:border-transparent text-xs text-[#313638] bg-white"
               />
             </div>
 
             {/* Status indicator */}
             {isUploading && (
-              <div className="flex items-center gap-2 text-xs text-[#F79256] font-medium pt-1">
+              <div className="flex items-center gap-2 text-xs text-[#008DD5] font-medium pt-1">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 <span>Uploading file via UploadThing...</span>
               </div>
@@ -145,8 +145,8 @@ export default function ApplicationForm({
         </div>
 
         {/* Cover Letter Section */}
-        <div>
-          <label htmlFor="coverLetter" className="block text-sm font-semibold text-slate-700 mb-1.5">
+        <div className="space-y-1.5">
+          <label htmlFor="coverLetter" className="block text-sm font-semibold text-[#0E103D]">
             Cover Letter <span className="text-slate-400 font-normal">(Optional)</span>
           </label>
           <textarea
@@ -154,19 +154,21 @@ export default function ApplicationForm({
             name="coverLetter"
             rows={4}
             placeholder="Write a brief cover letter highlighting your experience and why you are a great fit..."
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#F79256]/50 focus:border-[#F79256] text-sm text-slate-900 bg-slate-50/50 resize-y"
+            className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#008DD5] focus:border-transparent text-sm text-[#313638] bg-white resize-y"
           />
         </div>
 
         {/* Submit button */}
-        <button
+        <Button
           type="submit"
           disabled={isUploading || !resumeUrl}
-          className="w-full sm:w-auto px-8 py-3.5 bg-[#F79256] hover:bg-[#e07e42] disabled:opacity-50 text-white font-semibold rounded-xl shadow-md transition-all inline-flex items-center justify-center gap-2 cursor-pointer"
+          variant="primary"
+          size="lg"
+          className="w-full sm:w-auto"
         >
-          <Send className="w-5 h-5" />
+          <Send className="w-4 h-4" />
           <span>Apply Now</span>
-        </button>
+        </Button>
       </form>
     </div>
   );

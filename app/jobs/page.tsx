@@ -5,6 +5,10 @@ import Link from "next/link";
 import { Briefcase, Sparkles, ArrowLeft } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
 
 export default async function JobsPage({
   searchParams,
@@ -50,115 +54,95 @@ export default async function JobsPage({
   );
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-16 selection:bg-[#F79256]/20 selection:text-[#F79256]">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-[#313638] font-sans selection:bg-[#008DD5]/10 selection:text-[#008DD5]">
       {/* Top Header / Navigation Bar */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#F79256] text-white flex items-center justify-center font-bold text-xs shadow-sm">
-              <Briefcase className="w-4 h-4" />
-            </div>
-            <span className="text-lg font-bold tracking-tight text-slate-900">
-              Talen<span className="text-[#F79256]">try</span>
-            </span>
-          </Link>
-
-          <Link
-            href={dashboardHref}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#F79256] transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>{dashboardLabel}</span>
-          </Link>
-        </div>
-      </header>
+      <Navbar session={session} />
 
       {/* Main Container */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
-        {/* Page Header */}
-        <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {/* Page Header Card */}
+        <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-xs space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F79256]/10 text-[#F79256] text-xs font-semibold uppercase tracking-wider">
+              <Badge variant="primary">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Job Openings</span>
-              </div>
-              <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                <span>Verified Job Openings</span>
+              </Badge>
+              <h1 className="text-3xl font-bold text-[#0E103D] tracking-tight">
                 Explore Opportunities
               </h1>
-              <p className="text-sm text-slate-500">
-                Discover positions matched with leading top employers.
+              <p className="text-sm text-[#313638]/70">
+                Discover positions matched with top hiring teams and employers.
               </p>
             </div>
 
-            <div className="px-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shrink-0 self-start sm:self-center">
+            <div className="px-3.5 py-1.5 bg-slate-100 border border-slate-200 rounded-lg text-xs font-semibold text-[#0E103D] shrink-0 self-start sm:self-center">
               {jobs.length} Position{jobs.length === 1 ? "" : "s"} Found
             </div>
           </div>
 
-          {/* Reusable Search Bar & Filters Component */}
+          {/* Search Bar & Filters */}
           <SearchBar />
         </div>
 
         {/* Active Search Summary */}
         {hasActiveFilters && (
-          <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600 px-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-[#313638] px-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span>Showing results for:</span>
+              <span className="text-xs font-medium text-slate-500">Showing results for:</span>
               {q && (
-                <span className="px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-900">
+                <Badge variant="neutral">
                   Keyword: "{q}"
-                </span>
+                </Badge>
               )}
               {location && (
-                <span className="px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-900">
+                <Badge variant="neutral">
                   Location: "{location}"
-                </span>
+                </Badge>
               )}
               {minSalary && Number(minSalary) > 0 && (
-                <span className="px-2.5 py-1 bg-emerald-50 border border-emerald-200 rounded-lg text-xs font-bold text-emerald-800">
+                <Badge variant="success">
                   Min Salary: ₹{minSalary} LPA+
-                </span>
+                </Badge>
               )}
               {experienceLevel && (
-                <span className="px-2.5 py-1 bg-blue-50 border border-blue-200 rounded-lg text-xs font-bold text-blue-800 capitalize">
+                <Badge variant="primary">
                   Exp: {experienceLevel}
-                </span>
+                </Badge>
               )}
               {jobType && (
-                <span className="px-2.5 py-1 bg-orange-50 border border-orange-200 rounded-lg text-xs font-bold text-orange-800">
+                <Badge variant="brand">
                   Type: {jobType}
-                </span>
+                </Badge>
               )}
             </div>
 
-            <Link href="/jobs" className="text-xs font-bold text-[#F79256] hover:underline">
+            <Link href="/jobs" className="text-xs font-semibold text-[#008DD5] hover:underline">
               Reset Filters
             </Link>
           </div>
         )}
 
-        {/* Jobs List */}
+        {/* Jobs List / Empty State */}
         {jobs.length === 0 ? (
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-12 text-center space-y-4 shadow-sm">
-            <div className="w-16 h-16 rounded-2xl bg-orange-50 text-[#F79256] mx-auto flex items-center justify-center">
-              <Briefcase className="w-8 h-8" />
+          <div className="bg-white border border-slate-200 rounded-xl p-12 text-center space-y-4 shadow-xs">
+            <div className="w-12 h-12 rounded-xl bg-slate-100 text-[#0E103D] mx-auto flex items-center justify-center border border-slate-200">
+              <Briefcase className="w-6 h-6" />
             </div>
-            <h2 className="text-xl font-bold text-slate-900">No matching jobs found</h2>
-            <p className="text-sm text-slate-500 max-w-md mx-auto">
-              We couldn't find any job listings matching your search criteria. Try adjusting your query or filters.
+            <h2 className="text-lg font-bold text-[#0E103D]">No matching jobs found</h2>
+            <p className="text-sm text-[#313638]/70 max-w-md mx-auto">
+              We couldn't find any job listings matching your search criteria. Try adjusting your query or resetting filters.
             </p>
             {hasActiveFilters && (
-              <Link
-                href="/jobs"
-                className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#F79256] hover:bg-[#e07e42] text-white font-semibold text-xs rounded-xl transition-all shadow-sm"
-              >
-                Clear Search Filters
+              <Link href="/jobs" className="inline-block pt-2">
+                <Button variant="primary" size="sm">
+                  Clear Search Filters
+                </Button>
               </Link>
             )}
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {jobs.map((job) => (
               <Link href={`/jobs/${job.id}`} key={job.id} className="block">
                 <JobCard job={job} />
@@ -166,7 +150,9 @@ export default async function JobsPage({
             ))}
           </div>
         )}
-      </div>
-    </main>
+      </main>
+
+      <Footer />
+    </div>
   );
 }

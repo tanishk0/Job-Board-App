@@ -49,16 +49,16 @@ export default function SaveJobButton({
         type="button"
         onClick={handleClick}
         title={optimisticIsSaved ? "Saved" : "Save Job"}
-        className={`p-2.5 rounded-xl border transition-all duration-150 flex items-center justify-center cursor-pointer ${
+        className={`p-2 rounded-lg border transition-colors flex items-center justify-center cursor-pointer ${
           optimisticIsSaved
-            ? "bg-[#F79256]/10 border-[#F79256]/30 text-[#F79256] hover:bg-[#F79256]/20"
-            : "bg-white border-slate-200 hover:border-[#F79256] text-slate-700 hover:text-[#F79256]"
+            ? "bg-[#008DD5]/10 border-[#008DD5]/30 text-[#008DD5] hover:bg-[#008DD5]/20"
+            : "bg-white border-slate-200 hover:border-[#008DD5] text-slate-700 hover:text-[#008DD5]"
         }`}
       >
         <Bookmark
-          className={`w-4 h-4 transition-all duration-150 ${
+          className={`w-4 h-4 transition-colors ${
             optimisticIsSaved
-              ? "fill-[#F79256] text-[#F79256]"
+              ? "fill-[#008DD5] text-[#008DD5]"
               : "text-slate-500"
           }`}
         />
@@ -71,22 +71,20 @@ export default function SaveJobButton({
       type="button"
       onClick={handleClick}
       title={optimisticIsSaved ? "Unsave Job" : "Save Job"}
-      className={`p-3 border rounded-xl transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer text-sm font-semibold shadow-xs ${
+      className={`px-4 py-2 border rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer text-sm font-medium shadow-xs ${
         optimisticIsSaved
-          ? "bg-[#F79256]/10 border-[#F79256]/30 text-[#F79256] hover:bg-[#F79256]/20"
-          : "bg-white border-slate-300 hover:border-[#F79256] text-slate-700 hover:text-[#F79256]"
+          ? "bg-[#008DD5]/10 border-[#008DD5]/30 text-[#008DD5] hover:bg-[#008DD5]/20"
+          : "bg-white border-slate-200 hover:border-[#008DD5] text-slate-700 hover:text-[#008DD5]"
       }`}
     >
       <Bookmark
-        className={`w-5 h-5 transition-all duration-150 ${
+        className={`w-4 h-4 transition-colors ${
           optimisticIsSaved
-            ? "fill-[#F79256] text-[#F79256]"
-            : "text-slate-700"
+            ? "fill-[#008DD5] text-[#008DD5]"
+            : "text-slate-600"
         }`}
       />
-      <span className="hidden sm:inline">
-        {optimisticIsSaved ? "Saved" : "Save Job"}
-      </span>
+      <span>{optimisticIsSaved ? "Saved" : "Save Job"}</span>
     </button>
   );
 }

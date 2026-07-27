@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { Briefcase, Building2, Search, ArrowRight, CheckCircle2, Users, Sparkles, UserCheck, LayoutDashboard } from "lucide-react";
+import { Building2, Search, ArrowRight, CheckCircle2, Users, Sparkles, UserCheck } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
 
 export default async function Home() {
   const session = await auth.api.getSession({
@@ -16,217 +21,167 @@ export default async function Home() {
   const candidateDashboardHref = isCandidate ? "/candidate" : "/auth/candidate/login";
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans selection:bg-[#F79256]/20 selection:text-[#F79256]">
-      {/* Navigation Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-[#F79256] text-white flex items-center justify-center font-bold shadow-sm group-hover:bg-[#e07e42] transition-colors">
-              <Briefcase className="w-5 h-5" />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-slate-900">
-              Talen<span className="text-[#F79256]">try</span>
-            </span>
-          </Link>
+    <div className="min-h-screen flex flex-col bg-white text-[#313638] font-sans selection:bg-[#008DD5]/10 selection:text-[#008DD5]">
+      {/* Top Navigation Bar */}
+      <Navbar session={session} />
 
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-            <Link href="/jobs" className="hover:text-[#F79256] transition-colors">
-              Browse Jobs
-            </Link>
-            <Link href={candidateDashboardHref} className="hover:text-[#F79256] transition-colors">
-              Candidates
-            </Link>
-            <Link href={employerDashboardHref} className="hover:text-[#F79256] transition-colors">
-              Employers
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-3">
-            {session ? (
-              <Link
-                href={isEmployer ? "/employer" : "/candidate"}
-                className="inline-flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-[#F79256] px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200/70 border border-slate-200 transition-colors"
-              >
-                <LayoutDashboard className="w-4 h-4 text-[#F79256]" />
-                <span>Dashboard</span>
-              </Link>
-            ) : (
-              <Link
-                href="/auth"
-                className="text-sm font-medium text-slate-700 hover:text-[#F79256] px-3 py-2 rounded-lg transition-colors hidden sm:block"
-              >
-                Sign In
-              </Link>
-            )}
-
-            <Link
-              href="/jobs"
-              className="px-4 py-2 bg-[#F79256] hover:bg-[#e07e42] text-white text-sm font-semibold rounded-lg shadow-sm hover:shadow transition-all inline-flex items-center gap-1.5"
-            >
-              Explore Jobs
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Section */}
+      {/* Main Content Area */}
       <main className="flex-1">
-        <section className="relative py-20 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
-          <div className="flex flex-col items-center text-center space-y-8 max-w-3xl mx-auto">
+        {/* Hero Section */}
+        <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+          <div className="flex flex-col items-center text-center space-y-6 max-w-3xl mx-auto">
             {/* Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F79256]/10 border border-[#F79256]/20 text-[#F79256] text-xs sm:text-sm font-semibold">
-              <Sparkles className="w-4 h-4" />
+            <Badge variant="primary">
+              <Sparkles className="w-3.5 h-3.5 text-[#008DD5]" />
               <span>Connecting Talent with Top Opportunities</span>
-            </div>
+            </Badge>
 
-            {/* Main Headline */}
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
-              Find Your Next Role or Hire <span className="text-[#F79256]">Top Tech Talent</span>
+            {/* Main Page Title */}
+            <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0E103D] leading-tight">
+              Find Your Next Role or Hire Top Tech Talent
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-slate-600 font-normal leading-relaxed max-w-2xl">
-              Discover opportunities across engineering, product, design, and marketing—or post your open listings to reach active job seekers.
+            <p className="text-base sm:text-lg text-[#313638]/80 font-normal leading-relaxed max-w-2xl">
+              Discover verified opportunities across engineering, product, design, and marketing—or post open listings to connect directly with active candidates.
             </p>
 
-            {/* Call to Actions */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto pt-2">
-              <Link
-                href="/jobs"
-                className="w-full sm:w-auto px-8 py-3.5 bg-[#F79256] hover:bg-[#e07e42] text-white text-base font-semibold rounded-xl shadow-md hover:shadow-lg transition-all inline-flex items-center justify-center gap-2"
-              >
-                <Search className="w-5 h-5" />
-                <span>Browse All Jobs</span>
+            {/* Primary & Secondary Call to Actions */}
+            <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto pt-2">
+              <Link href="/jobs" className="w-full sm:w-auto">
+                <Button variant="primary" size="lg" className="w-full sm:w-auto">
+                  <Search className="w-4 h-4" />
+                  <span>Browse All Jobs</span>
+                </Button>
               </Link>
 
-              <Link
-                href={postJobHref}
-                className="w-full sm:w-auto px-8 py-3.5 bg-white border border-slate-300 hover:border-[#F79256] text-slate-700 hover:text-[#F79256] text-base font-semibold rounded-xl shadow-xs hover:shadow-sm transition-all inline-flex items-center justify-center gap-2"
-              >
-                <Building2 className="w-5 h-5 text-[#F79256]" />
-                <span>Post a Job</span>
+              <Link href={postJobHref} className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                  <Building2 className="w-4 h-4 text-[#313638]/70" />
+                  <span>Post a Job</span>
+                </Button>
               </Link>
             </div>
 
-            {/* Trust highlights */}
-            <div className="flex flex-wrap justify-center items-center gap-6 pt-6 text-xs sm:text-sm text-slate-500 font-medium">
+            {/* Enterprise Trust Highlights */}
+            <div className="flex flex-wrap justify-center items-center gap-6 pt-4 text-xs sm:text-sm text-[#313638]/70 font-medium">
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <CheckCircle2 className="w-4 h-4 text-[#008DD5]" />
                 <span>Verified Employers</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <CheckCircle2 className="w-4 h-4 text-[#008DD5]" />
                 <span>Direct Applications</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>Fast Hiring Pipeline</span>
+                <CheckCircle2 className="w-4 h-4 text-[#008DD5]" />
+                <span>Streamlined Hiring Pipeline</span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Feature Cards Grid */}
-        <section className="py-16 bg-white border-y border-slate-200/80 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto space-y-12">
-            <div className="text-center max-w-2xl mx-auto space-y-3">
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
+        {/* Feature Highlights Section */}
+        <section className="py-12 sm:py-16 bg-slate-50/60 border-y border-slate-200 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto space-y-10">
+            <div className="text-center max-w-2xl mx-auto space-y-2">
+              <h2 className="text-xl sm:text-2xl font-semibold text-[#0E103D]">
                 Built for Both Job Seekers & Hiring Teams
               </h2>
-              <p className="text-slate-600 text-sm sm:text-base">
+              <p className="text-[#313638]/80 text-sm sm:text-base">
                 Everything you need to navigate your job search or manage open postings efficiently.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Card 1 */}
-              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-[#F79256]/50 shadow-xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
-                <div className="space-y-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#F79256]/10 text-[#F79256] flex items-center justify-center font-bold">
-                    <UserCheck className="w-6 h-6" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Feature 1: Candidate Portal */}
+              <Card className="hover:border-[#008DD5]/40 transition-colors flex flex-col justify-between">
+                <div className="space-y-3">
+                  <div className="w-10 h-10 rounded-lg bg-[#008DD5]/10 text-[#008DD5] flex items-center justify-center font-medium">
+                    <UserCheck className="w-5 h-5" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900">For Candidates</h3>
-                  <p className="text-slate-600 text-sm leading-relaxed">
+                  <h3 className="text-lg font-semibold text-[#0E103D]">For Candidates</h3>
+                  <p className="text-[#313638]/80 text-sm leading-relaxed">
                     Browse structured job cards complete with salary ranges, experience levels, and direct company profile insights.
                   </p>
                 </div>
                 <Link
                   href={candidateDashboardHref}
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#F79256] hover:text-[#e07e42] pt-2"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-[#008DD5] hover:underline transition-colors pt-2"
                 >
                   Candidate Portal
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-              </div>
+              </Card>
 
-              {/* Card 2 */}
-              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-[#F79256]/50 shadow-xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
-                <div className="space-y-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#F79256]/10 text-[#F79256] flex items-center justify-center font-bold">
-                    <Building2 className="w-6 h-6" />
+              {/* Feature 2: Employer Dashboard */}
+              <Card className="hover:border-[#008DD5]/40 transition-colors flex flex-col justify-between">
+                <div className="space-y-3">
+                  <div className="w-10 h-10 rounded-lg bg-[#0E103D]/10 text-[#0E103D] flex items-center justify-center font-medium">
+                    <Building2 className="w-5 h-5" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900">For Employers</h3>
-                  <p className="text-slate-600 text-sm leading-relaxed">
+                  <h3 className="text-lg font-semibold text-[#0E103D]">For Employers</h3>
+                  <p className="text-[#313638]/80 text-sm leading-relaxed">
                     Manage company profiles, post job descriptions, track applicants, and discover qualified candidates easily.
                   </p>
                 </div>
                 <Link
                   href={employerDashboardHref}
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#F79256] hover:text-[#e07e42] pt-2"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-[#008DD5] hover:underline transition-colors pt-2"
                 >
                   Employer Dashboard
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-              </div>
+              </Card>
 
-              {/* Card 3 */}
-              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-[#F79256]/50 shadow-xs hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
-                <div className="space-y-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#F79256]/10 text-[#F79256] flex items-center justify-center font-bold">
-                    <Users className="w-6 h-6" />
+              {/* Feature 3: Streamlined Workflow */}
+              <Card className="hover:border-[#008DD5]/40 transition-colors flex flex-col justify-between">
+                <div className="space-y-3">
+                  <div className="w-10 h-10 rounded-lg bg-[#008DD5]/10 text-[#008DD5] flex items-center justify-center font-medium">
+                    <Users className="w-5 h-5" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900">Streamlined Workflow</h3>
-                  <p className="text-slate-600 text-sm leading-relaxed">
+                  <h3 className="text-lg font-semibold text-[#0E103D]">Streamlined Workflow</h3>
+                  <p className="text-[#313638]/80 text-sm leading-relaxed">
                     Experience a clean interface designed to minimize friction for both job applications and active postings.
                   </p>
                 </div>
                 <Link
                   href="/jobs"
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#F79256] hover:text-[#e07e42] pt-2"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-[#008DD5] hover:underline transition-colors pt-2"
                 >
                   Explore Listings
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-              </div>
+              </Card>
             </div>
           </div>
         </section>
 
-        {/* CTA Banner */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-          <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl">
-            <div className="space-y-3 text-center md:text-left max-w-xl">
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+        {/* Action Banner */}
+        <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+          <div className="bg-[#0E103D] text-white rounded-xl p-8 sm:p-10 border border-[#0E103D] shadow-xs flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-2 text-center md:text-left max-w-xl">
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
                 Ready to find your next opportunity?
               </h2>
-              <p className="text-slate-300 text-base font-normal">
+              <p className="text-slate-300 text-sm sm:text-base font-normal">
                 Join our platform today and connect with employers hiring for immediate openings.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 flex-shrink-0 w-full sm:w-auto">
-              <Link
-                href="/jobs"
-                className="w-full sm:w-auto px-6 py-3.5 bg-[#F79256] hover:bg-[#e07e42] text-white text-sm font-semibold rounded-xl shadow-md transition-all text-center"
-              >
-                Search Jobs
+            <div className="flex flex-col sm:flex-row items-center gap-3 flex-shrink-0 w-full sm:w-auto">
+              <Link href="/jobs" className="w-full sm:w-auto">
+                <Button variant="primary" size="md" className="w-full sm:w-auto">
+                  Search Jobs
+                </Button>
               </Link>
               <Link
                 href={session ? (isEmployer ? "/employer" : "/candidate") : "/auth"}
-                className="w-full sm:w-auto px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 text-sm font-semibold rounded-xl transition-all text-center"
+                className="w-full sm:w-auto"
               >
-                {session ? "Go to Dashboard" : "Create Account"}
+                <Button variant="ghost" size="md" className="w-full sm:w-auto text-slate-200 border border-slate-700 hover:bg-[#008DD5]/20 hover:text-white">
+                  {session ? "Go to Dashboard" : "Create Account"}
+                </Button>
               </Link>
             </div>
           </div>
@@ -234,25 +189,10 @@ export default async function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-medium">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-[#F79256] text-white flex items-center justify-center font-bold text-xs">
-              <Briefcase className="w-3.5 h-3.5" />
-            </div>
-            <span className="text-sm font-bold text-slate-900">Talentry</span>
-          </div>
-
-          <div className="flex items-center gap-6">
-            <Link href="/jobs" className="hover:text-[#F79256] transition-colors">Jobs</Link>
-            <Link href={candidateDashboardHref} className="hover:text-[#F79256] transition-colors">Candidate</Link>
-            <Link href={employerDashboardHref} className="hover:text-[#F79256] transition-colors">Employer</Link>
-          </div>
-
-          <p>© {new Date().getFullYear()} Talentry. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer
+        candidateDashboardHref={candidateDashboardHref}
+        employerDashboardHref={employerDashboardHref}
+      />
     </div>
   );
 }
-

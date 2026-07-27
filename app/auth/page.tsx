@@ -1,23 +1,26 @@
 import Link from "next/link";
 import { Briefcase, Building2, UserCheck, ArrowRight, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
 
 export default function AuthPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-zinc-900 to-black text-white flex flex-col justify-between p-4 sm:p-6 lg:p-8 font-sans selection:bg-[#F79256]/30 selection:text-[#F79256]">
-      {/* Top Navigation */}
+    <main className="min-h-screen bg-slate-50 text-[#313638] flex flex-col justify-between p-4 sm:p-6 lg:p-8 font-sans selection:bg-[#008DD5]/10 selection:text-[#008DD5]">
+      {/* Top Header */}
       <div className="max-w-6xl w-full mx-auto flex items-center justify-between py-4">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-[#F79256] text-white flex items-center justify-center font-bold shadow-md group-hover:bg-[#e07e42] transition-colors">
-            <Briefcase className="w-5 h-5" />
+          <div className="w-8 h-8 rounded-lg bg-[#0E103D] text-white flex items-center justify-center font-bold shadow-xs group-hover:bg-[#008DD5] transition-colors">
+            <Briefcase className="w-4 h-4" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-white">
-            Talen<span className="text-[#F79256]">try</span>
+          <span className="text-lg font-bold tracking-tight text-[#0E103D]">
+            Talentry
           </span>
         </Link>
 
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-medium text-[#313638]/70 hover:text-[#0E103D] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Home</span>
@@ -25,101 +28,99 @@ export default function AuthPage() {
       </div>
 
       {/* Main Choice Section */}
-      <div className="max-w-4xl w-full mx-auto my-auto py-12 px-2 text-center space-y-10">
+      <div className="max-w-4xl w-full mx-auto my-auto py-8 text-center space-y-8">
         <div className="space-y-3 max-w-xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F79256]/10 border border-[#F79256]/20 text-[#F79256] text-xs font-semibold uppercase tracking-wider">
-            Portal Access
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
-            How would you like to continue?
+          <Badge variant="primary">
+            <span>Portal Access</span>
+          </Badge>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0E103D] leading-tight">
+            Select Your Account Type
           </h1>
-          <p className="text-base sm:text-lg text-zinc-400">
-            Select your role to log in or create a new account on Talentry.
+          <p className="text-sm sm:text-base text-[#313638]/80">
+            Choose how you would like to continue to your Talentry portal.
           </p>
         </div>
 
         {/* 2 Options Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-3xl mx-auto">
           {/* Candidate Card */}
-          <div className="bg-zinc-900/90 border border-zinc-800 hover:border-[#F79256]/50 rounded-2xl p-8 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between space-y-6 group hover:shadow-xl hover:shadow-[#F79256]/5">
+          <Card className="hover:border-[#008DD5]/50 transition-colors flex flex-col justify-between space-y-6">
             <div className="space-y-4">
-              <div className="w-14 h-14 rounded-2xl bg-[#F79256]/10 text-[#F79256] flex items-center justify-center font-bold border border-[#F79256]/20 group-hover:scale-105 transition-transform">
-                <UserCheck className="w-7 h-7" />
+              <div className="w-12 h-12 rounded-xl bg-[#008DD5]/10 text-[#008DD5] flex items-center justify-center font-bold">
+                <UserCheck className="w-6 h-6" />
               </div>
 
               <div>
-                <span className="text-xs font-semibold text-[#F79256] uppercase tracking-wider">
+                <span className="text-xs font-semibold text-[#008DD5] uppercase tracking-wider">
                   For Job Seekers
                 </span>
-                <h2 className="text-2xl font-bold text-white mt-1">Candidate</h2>
-                <p className="text-sm text-zinc-400 leading-relaxed mt-2">
-                  Browse open positions, submit applications, and manage your candidate profile.
+                <h2 className="text-xl font-bold text-[#0E103D] mt-1">Candidate</h2>
+                <p className="text-sm text-[#313638]/70 leading-relaxed mt-1.5">
+                  Browse open positions, submit direct job applications, and manage your professional profile.
                 </p>
               </div>
             </div>
 
             <div className="space-y-3 pt-2">
-              <Link
-                href="/auth/candidate/login"
-                className="w-full py-3.5 px-4 bg-[#F79256] hover:bg-[#e07e42] text-white font-semibold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-[#F79256]/20"
-              >
-                <span>Log In as Candidate</span>
-                <ArrowRight className="w-4 h-4" />
+              <Link href="/auth/candidate/login" className="block w-full">
+                <Button variant="primary" size="md" className="w-full">
+                  <span>Log In as Candidate</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
               </Link>
 
               <div className="text-center">
                 <Link
                   href="/auth/candidate/signup"
-                  className="text-xs text-zinc-400 hover:text-white transition-colors"
+                  className="text-xs text-[#313638]/70 hover:text-[#008DD5] transition-colors"
                 >
-                  Don&apos;t have an account? <span className="text-[#F79256] font-medium hover:underline">Sign Up</span>
+                  Don&apos;t have an account? <span className="text-[#008DD5] font-semibold hover:underline">Sign Up</span>
                 </Link>
               </div>
             </div>
-          </div>
+          </Card>
 
           {/* Employer Card */}
-          <div className="bg-zinc-900/90 border border-zinc-800 hover:border-blue-500/50 rounded-2xl p-8 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between space-y-6 group hover:shadow-xl hover:shadow-blue-500/5">
+          <Card className="hover:border-[#0E103D]/50 transition-colors flex flex-col justify-between space-y-6">
             <div className="space-y-4">
-              <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold border border-blue-500/20 group-hover:scale-105 transition-transform">
-                <Building2 className="w-7 h-7" />
+              <div className="w-12 h-12 rounded-xl bg-[#0E103D]/10 text-[#0E103D] flex items-center justify-center font-bold">
+                <Building2 className="w-6 h-6" />
               </div>
 
               <div>
-                <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider">
+                <span className="text-xs font-semibold text-[#0E103D] uppercase tracking-wider">
                   For Hiring Teams
                 </span>
-                <h2 className="text-2xl font-bold text-white mt-1">Employer</h2>
-                <p className="text-sm text-zinc-400 leading-relaxed mt-2">
-                  Post job openings, manage candidate applications, and showcase your company.
+                <h2 className="text-xl font-bold text-[#0E103D] mt-1">Employer</h2>
+                <p className="text-sm text-[#313638]/70 leading-relaxed mt-1.5">
+                  Post job openings, track applicant pipelines, and manage your company profile.
                 </p>
               </div>
             </div>
 
             <div className="space-y-3 pt-2">
-              <Link
-                href="/auth/employer/login"
-                className="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-blue-600/20"
-              >
-                <span>Log In as Employer</span>
-                <ArrowRight className="w-4 h-4" />
+              <Link href="/auth/employer/login" className="block w-full">
+                <Button variant="secondary" size="md" className="w-full">
+                  <span>Log In as Employer</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
               </Link>
 
               <div className="text-center">
                 <Link
                   href="/auth/employer/signup"
-                  className="text-xs text-zinc-400 hover:text-white transition-colors"
+                  className="text-xs text-[#313638]/70 hover:text-[#0E103D] transition-colors"
                 >
-                  New employer? <span className="text-blue-400 font-medium hover:underline">Register Company</span>
+                  New employer? <span className="text-[#0E103D] font-semibold hover:underline">Register Company</span>
                 </Link>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
 
-      {/* Bottom Footer */}
-      <div className="max-w-6xl w-full mx-auto text-center py-4 text-xs text-zinc-500">
+      {/* Footer */}
+      <div className="max-w-6xl w-full mx-auto text-center py-4 text-xs text-[#313638]/60 font-medium">
         © {new Date().getFullYear()} Talentry. All rights reserved.
       </div>
     </main>

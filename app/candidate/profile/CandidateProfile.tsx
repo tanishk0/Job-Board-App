@@ -12,6 +12,9 @@ import {
   User,
   CheckCircle,
 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
 
 type Props = {
   profile: any;
@@ -29,51 +32,48 @@ function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
 export default function CandidateProfile({ profile }: Props) {
   if (!profile) {
     return (
-      <main className="min-h-screen w-full flex justify-center items-center bg-slate-50 py-10 px-4">
-        <div className="w-full max-w-xl bg-white border border-slate-200 rounded-md shadow-sm p-8 text-center space-y-4">
-          <div className="w-12 h-12 rounded-full bg-[#F79256]/10 text-[#F79256] mx-auto flex items-center justify-center">
+      <div className="w-full max-w-xl mx-auto py-12">
+        <Card className="text-center space-y-4">
+          <div className="w-12 h-12 rounded-xl bg-slate-100 text-[#0E103D] mx-auto flex items-center justify-center border border-slate-200">
             <User className="w-6 h-6" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900">No Profile Found</h2>
-          <p className="text-sm text-slate-500">
+          <h2 className="text-lg font-bold text-[#0E103D]">No Profile Found</h2>
+          <p className="text-xs text-[#313638]/70">
             You haven't set up your candidate profile yet. Create one now to start applying to jobs.
           </p>
           <div className="pt-2">
-            <Link
-              href="/candidate/profile/edit"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#F79256] hover:bg-[#e07e42] text-white text-sm font-medium rounded-md shadow-sm transition-colors"
-            >
-              <Edit3 className="w-4 h-4" />
-              Create Profile
+            <Link href="/candidate/profile/edit">
+              <Button variant="primary" size="md">
+                <Edit3 className="w-4 h-4" />
+                <span>Create Profile</span>
+              </Button>
             </Link>
           </div>
-        </div>
-      </main>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen w-full flex justify-center items-center bg-slate-50 py-10 px-4">
-      <div className="w-full max-w-3xl bg-white border border-slate-200 rounded-md shadow-sm p-6 sm:p-8 text-slate-900 space-y-6">
-        
-        {/* Header Bar with Action */}
-        <div className="flex items-start justify-between border-b border-slate-200 pb-5 gap-4">
+    <div className="w-full max-w-4xl space-y-6">
+      <Card className="space-y-6">
+        {/* Header Bar */}
+        <div className="flex items-start justify-between border-b border-slate-100 pb-5 gap-4">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-slate-900">
+            <h1 className="text-2xl font-bold text-[#0E103D]">
               {profile.preferredRole || "Candidate Profile"}
             </h1>
             {profile.headline && (
-              <p className="text-sm font-medium text-[#F79256]">
+              <p className="text-sm font-semibold text-[#008DD5]">
                 {profile.headline}
               </p>
             )}
           </div>
-          <Link
-            href="/candidate/profile/edit"
-            className="px-4 py-2 bg-[#F79256] hover:bg-[#e07e42] text-white text-xs font-medium rounded-md shadow-sm transition-colors inline-flex items-center gap-1.5 flex-shrink-0"
-          >
-            <Edit3 className="w-3.5 h-3.5" />
-            Edit Profile
+          <Link href="/candidate/profile/edit">
+            <Button variant="primary" size="sm">
+              <Edit3 className="w-3.5 h-3.5" />
+              <span>Edit Profile</span>
+            </Button>
           </Link>
         </div>
 
@@ -81,7 +81,7 @@ export default function CandidateProfile({ profile }: Props) {
         {profile.bio && (
           <div className="space-y-1.5">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">About Me</h3>
-            <p className="text-sm text-slate-700 leading-relaxed bg-slate-50 p-3.5 border border-slate-200 rounded-md">
+            <p className="text-sm text-[#313638] leading-relaxed bg-slate-50 p-4 border border-slate-200 rounded-lg">
               {profile.bio}
             </p>
           </div>
@@ -89,54 +89,50 @@ export default function CandidateProfile({ profile }: Props) {
 
         {/* Core Profile Details Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Experience Level */}
           {profile.experienceLevel && (
-            <div className="flex items-center gap-3 p-3 border border-slate-200 rounded-md bg-slate-50/50">
-              <div className="p-2 rounded-md bg-[#F79256]/10 text-[#F79256]">
+            <div className="flex items-center gap-3 p-3.5 border border-slate-200 rounded-lg bg-slate-50/50">
+              <div className="p-2 rounded-lg bg-[#008DD5]/10 text-[#008DD5]">
                 <Award className="w-4 h-4" />
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Experience</p>
-                <p className="text-sm font-medium text-slate-900 capitalize">{profile.experienceLevel}</p>
+                <p className="text-sm font-medium text-[#0E103D] capitalize">{profile.experienceLevel}</p>
               </div>
             </div>
           )}
 
-          {/* Preferred Role */}
           {profile.preferredRole && (
-            <div className="flex items-center gap-3 p-3 border border-slate-200 rounded-md bg-slate-50/50">
-              <div className="p-2 rounded-md bg-[#F79256]/10 text-[#F79256]">
+            <div className="flex items-center gap-3 p-3.5 border border-slate-200 rounded-lg bg-slate-50/50">
+              <div className="p-2 rounded-lg bg-[#0E103D]/10 text-[#0E103D]">
                 <Briefcase className="w-4 h-4" />
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Target Role</p>
-                <p className="text-sm font-medium text-slate-900">{profile.preferredRole}</p>
+                <p className="text-sm font-medium text-[#0E103D]">{profile.preferredRole}</p>
               </div>
             </div>
           )}
 
-          {/* Location */}
           {profile.location && (
-            <div className="flex items-center gap-3 p-3 border border-slate-200 rounded-md bg-slate-50/50">
-              <div className="p-2 rounded-md bg-[#F79256]/10 text-[#F79256]">
+            <div className="flex items-center gap-3 p-3.5 border border-slate-200 rounded-lg bg-slate-50/50">
+              <div className="p-2 rounded-lg bg-[#008DD5]/10 text-[#008DD5]">
                 <MapPin className="w-4 h-4" />
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Location</p>
-                <p className="text-sm font-medium text-slate-900">{profile.location}</p>
+                <p className="text-sm font-medium text-[#0E103D]">{profile.location}</p>
               </div>
             </div>
           )}
 
-          {/* Phone */}
           {profile.phone && (
-            <div className="flex items-center gap-3 p-3 border border-slate-200 rounded-md bg-slate-50/50">
-              <div className="p-2 rounded-md bg-[#F79256]/10 text-[#F79256]">
+            <div className="flex items-center gap-3 p-3.5 border border-slate-200 rounded-lg bg-slate-50/50">
+              <div className="p-2 rounded-lg bg-[#008DD5]/10 text-[#008DD5]">
                 <Phone className="w-4 h-4" />
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Phone</p>
-                <p className="text-sm font-medium text-slate-900">{profile.phone}</p>
+                <p className="text-sm font-medium text-[#0E103D]">{profile.phone}</p>
               </div>
             </div>
           )}
@@ -144,18 +140,18 @@ export default function CandidateProfile({ profile }: Props) {
 
         {/* Links & Documents */}
         {(profile.portfolioUrl || profile.githubUrl || profile.resumeUrl) && (
-          <div className="border-t border-slate-200 pt-5 space-y-3">
+          <div className="border-t border-slate-100 pt-5 space-y-3">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">Links & Documents</h3>
-            
-            <div className="flex flex-wrap gap-3">
+
+            <div className="flex flex-wrap gap-2.5">
               {profile.portfolioUrl && (
                 <a
                   href={profile.portfolioUrl.startsWith("http") ? profile.portfolioUrl : `https://${profile.portfolioUrl}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 px-3.5 py-2 border border-slate-300 rounded-md text-xs font-medium text-slate-700 hover:text-[#F79256] hover:border-[#F79256] bg-white transition-colors"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-medium text-[#313638] hover:text-[#008DD5] hover:border-[#008DD5] bg-white transition-colors"
                 >
-                  <Globe className="w-4 h-4 text-slate-500" />
+                  <Globe className="w-3.5 h-3.5 text-slate-500" />
                   <span>Portfolio Website</span>
                   <ExternalLink className="w-3 h-3 text-slate-400" />
                 </a>
@@ -166,9 +162,9 @@ export default function CandidateProfile({ profile }: Props) {
                   href={profile.githubUrl.startsWith("http") ? profile.githubUrl : `https://${profile.githubUrl}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 px-3.5 py-2 border border-slate-300 rounded-md text-xs font-medium text-slate-700 hover:text-[#F79256] hover:border-[#F79256] bg-white transition-colors"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-medium text-[#313638] hover:text-[#008DD5] hover:border-[#008DD5] bg-white transition-colors"
                 >
-                  <GithubIcon className="w-4 h-4 text-slate-500" />
+                  <GithubIcon className="w-3.5 h-3.5 text-slate-500" />
                   <span>GitHub Profile</span>
                   <ExternalLink className="w-3 h-3 text-slate-400" />
                 </a>
@@ -179,18 +175,17 @@ export default function CandidateProfile({ profile }: Props) {
                   href={profile.resumeUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 px-3.5 py-2 border border-emerald-300 rounded-md text-xs font-medium text-emerald-800 bg-emerald-50 hover:bg-emerald-100 transition-colors"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 border border-emerald-200 rounded-lg text-xs font-medium text-emerald-800 bg-emerald-50 hover:bg-emerald-100 transition-colors"
                 >
-                  <FileText className="w-4 h-4 text-emerald-600" />
+                  <FileText className="w-3.5 h-3.5 text-emerald-600" />
                   <span>View Resume</span>
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600 ml-1" />
+                  <CheckCircle className="w-3 h-3 text-emerald-600" />
                 </a>
               )}
             </div>
           </div>
         )}
-
-      </div>
-    </main>
+      </Card>
+    </div>
   );
 }

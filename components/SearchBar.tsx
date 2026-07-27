@@ -38,18 +38,18 @@ export default function SearchBar({
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Search Input Bar */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl shadow-sm hover:shadow-md transition-all p-3 flex items-center gap-3">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-xs p-2.5 flex items-center gap-3">
         {isPending ? (
-          <Loader2 className="w-5 h-5 text-[#F79256] animate-spin shrink-0 ml-1" />
+          <Loader2 className="w-4 h-4 text-[#008DD5] animate-spin shrink-0 ml-2" />
         ) : (
-          <Search className="w-5 h-5 text-[#F79256] shrink-0 ml-1" />
+          <Search className="w-4 h-4 text-[#313638]/70 shrink-0 ml-2" />
         )}
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
-          className="w-full text-sm sm:text-base font-medium text-slate-900 bg-transparent focus:outline-none placeholder:text-slate-400"
+          className="w-full text-sm font-medium text-[#313638] bg-transparent focus:outline-none placeholder:text-slate-400"
         />
         {query && (
           <button
@@ -64,16 +64,16 @@ export default function SearchBar({
         <button
           type="button"
           onClick={() => setShowFilters(!showFilters)}
-          className={`px-3 py-2 rounded-xl border text-xs font-bold transition-all flex items-center gap-2 cursor-pointer shrink-0 ${
+          className={`px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer shrink-0 ${
             showFilters || hasFilters
-              ? "bg-[#F79256]/10 border-[#F79256]/30 text-[#F79256]"
-              : "bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200"
+              ? "bg-[#008DD5]/10 border-[#008DD5]/30 text-[#008DD5]"
+              : "bg-slate-100 border-slate-200 text-[#313638] hover:bg-slate-200"
           }`}
         >
-          <SlidersHorizontal className="w-4 h-4" />
+          <SlidersHorizontal className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">Filters</span>
           {hasFilters && (
-            <span className="w-2 h-2 rounded-full bg-[#F79256]" />
+            <span className="w-2 h-2 rounded-full bg-[#008DD5]" />
           )}
           {showFilters ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
@@ -81,12 +81,12 @@ export default function SearchBar({
 
       {/* Expanded Filters Panel */}
       {showFilters && (
-        <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm space-y-5 animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Location Input Filter */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#F79256]" />
+              <label className="text-xs font-semibold uppercase tracking-wider text-[#0E103D] flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-[#008DD5]" />
                 <span>Location</span>
               </label>
               <div className="relative flex items-center">
@@ -95,13 +95,13 @@ export default function SearchBar({
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="e.g. Delhi, Remote, Hybrid..."
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#F79256] focus:ring-1 focus:ring-[#F79256]"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-[#313638] focus:outline-none focus:border-[#008DD5] focus:ring-1 focus:ring-[#008DD5]"
                 />
                 {location && (
                   <button
                     type="button"
                     onClick={() => setLocation("")}
-                    className="absolute right-3 text-slate-400 hover:text-slate-600"
+                    className="absolute right-2.5 text-slate-400 hover:text-slate-600"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -109,14 +109,14 @@ export default function SearchBar({
               </div>
             </div>
 
-            {/* Salary Range Slider Filter (in Rs LPA) */}
+            {/* Salary Range Slider Filter */}
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-600">
+              <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#0E103D]">
                 <span className="flex items-center gap-1">
                   <IndianRupee className="w-3.5 h-3.5 text-emerald-600" />
                   <span>Min Salary</span>
                 </span>
-                <span className="text-[#F79256] font-extrabold normal-case text-xs">
+                <span className="text-[#008DD5] font-bold normal-case text-xs">
                   {salaryDisplay}
                 </span>
               </div>
@@ -128,7 +128,7 @@ export default function SearchBar({
                   step="2"
                   value={minSalary}
                   onChange={(e) => setMinSalary(e.target.value)}
-                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#F79256]"
+                  className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#008DD5]"
                 />
                 <div className="flex justify-between text-[10px] font-semibold text-slate-400">
                   <span>₹0</span>
@@ -140,14 +140,14 @@ export default function SearchBar({
 
             {/* Experience Level Filter */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <label className="text-xs font-semibold uppercase tracking-wider text-[#0E103D] flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#008DD5]" />
                 <span>Experience Level</span>
               </label>
               <select
                 value={experienceLevel}
                 onChange={(e) => setExperienceLevel(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#F79256] focus:ring-1 focus:ring-[#F79256] cursor-pointer"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-[#313638] focus:outline-none focus:border-[#008DD5] focus:ring-1 focus:ring-[#008DD5] cursor-pointer"
               >
                 <option value="">All Experience Levels</option>
                 <option value="fresher">Fresher</option>
@@ -160,9 +160,9 @@ export default function SearchBar({
 
           {/* Job Type Pills & Clear Actions */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-slate-100">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold text-slate-500 mr-1 flex items-center gap-1">
-                <Briefcase className="w-3.5 h-3.5 text-[#F79256]" />
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-xs font-medium text-slate-500 mr-1 flex items-center gap-1">
+                <Briefcase className="w-3.5 h-3.5 text-[#0E103D]" />
                 Job Type:
               </span>
               {[
@@ -176,10 +176,10 @@ export default function SearchBar({
                   key={type.value}
                   type="button"
                   onClick={() => setJobType(type.value)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
                     jobType === type.value
-                      ? "bg-[#F79256] text-white shadow-xs"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      ? "bg-[#008DD5] text-white shadow-xs"
+                      : "bg-slate-100 text-[#313638] hover:bg-slate-200"
                   }`}
                 >
                   {type.label}
@@ -191,9 +191,9 @@ export default function SearchBar({
               <button
                 type="button"
                 onClick={clearFilters}
-                className="text-xs font-bold text-slate-500 hover:text-slate-800 underline transition-colors cursor-pointer shrink-0 self-end sm:self-center"
+                className="text-xs font-semibold text-[#008DD5] hover:underline transition-colors cursor-pointer shrink-0 self-end sm:self-center"
               >
-                Clear All Filters
+                Clear Filters
               </button>
             )}
           </div>
