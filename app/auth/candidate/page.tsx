@@ -1,7 +1,10 @@
 import React from "react";
 import Link from "next/link";
+import { redirectIfAuthenticated } from "@/lib/auth/session";
 
-export default function CandidatePortalPage() {
+export default async function CandidatePortalPage() {
+  await redirectIfAuthenticated();
+
   return (
     <main className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-zinc-900 to-black text-white">
       <div className="w-full max-w-md bg-zinc-900/90 border border-zinc-800 backdrop-blur-xl rounded-md p-8 shadow-2xl text-center">

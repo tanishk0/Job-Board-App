@@ -1,11 +1,27 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { UserCircle, Briefcase, PlusCircle, UserRoundSearch, Building2 } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { UserCircle, Briefcase, PlusCircle, UserRoundSearch, Building2, LogOut } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 export default function EmployerSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/auth");
+          router.refresh();
+        },
+      },
+    });
+  };
 
   const navItems = [
     { label: "Overview", href: "/employer", icon: Building2 },
@@ -42,6 +58,18 @@ export default function EmployerSidebar() {
           );
         })}
       </nav>
+
+      <div className="p-3 border-t border-slate-200 mt-auto">
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors disabled:opacity-50 cursor-pointer"
+        >
+          <LogOut className="w-4 h-4 text-red-600" />
+          <span>{isLoggingOut ? "Logging out..." : "Log Out"}</span>
+        </button>
+      </div>
     </aside>
   );
 }

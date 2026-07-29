@@ -45,3 +45,15 @@ export async function requireCandidate() {
 
     return session;
 }
+
+export async function redirectIfAuthenticated() {
+    const session = await getSession();
+
+    if (session?.user) {
+        if (session.user.role === "employer") {
+            redirect("/employer/profile");
+        } else {
+            redirect("/candidate/profile");
+        }
+    }
+}

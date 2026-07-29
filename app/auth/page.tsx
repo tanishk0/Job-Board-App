@@ -3,8 +3,11 @@ import { Briefcase, Building2, UserCheck, ArrowRight, ArrowLeft } from "lucide-r
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
+import { redirectIfAuthenticated } from "@/lib/auth/session";
 
-export default function AuthPage() {
+export default async function AuthPage() {
+  await redirectIfAuthenticated();
+
   return (
     <main className="min-h-screen bg-slate-50 text-[#313638] flex flex-col justify-between p-4 sm:p-6 lg:p-8 font-sans selection:bg-[#008DD5]/10 selection:text-[#008DD5]">
       {/* Top Header */}

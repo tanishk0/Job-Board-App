@@ -10,6 +10,14 @@ import { Input } from "@/components/ui/Input";
 
 export default function EmployerSignupPage() {
   const router = useRouter();
+  const { data: session } = authClient.useSession();
+
+  React.useEffect(() => {
+    if (session?.user) {
+      router.replace(session.user.role === "employer" ? "/employer/profile" : "/candidate/profile");
+    }
+  }, [session, router]);
+
   const [formData, setFormData] = useState({
     companyName: "",
     fullName: "",
@@ -123,7 +131,7 @@ export default function EmployerSignupPage() {
       email: formData.email,
       password: formData.password,
       role: "employer",
-      callbackURL: "/employer",
+      callbackURL: "/employer/profile",
     });
 
     setIsSubmitting(false);
@@ -134,9 +142,13 @@ export default function EmployerSignupPage() {
     }
 
     setSubmitSuccess(true);
-    router.push("/employer");
+    router.push("/employer/profile");
     router.refresh();
   };
+
+  if (session?.user) {
+    return null;
+  }
 
   return (
     <main className="min-h-screen flex flex-col justify-between p-4 sm:p-6 lg:p-8 bg-slate-50 text-[#313638]">

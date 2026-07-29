@@ -10,6 +10,14 @@ import { Input } from "@/components/ui/Input";
 
 export default function CandidateSignupPage() {
   const router = useRouter();
+  const { data: session } = authClient.useSession();
+
+  React.useEffect(() => {
+    if (session?.user) {
+      router.replace(session.user.role === "employer" ? "/employer/profile" : "/candidate/profile");
+    }
+  }, [session, router]);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -110,7 +118,7 @@ export default function CandidateSignupPage() {
       email: formData.email,
       password: formData.password,
       role: "candidate",
-      callbackURL: "/candidate",
+      callbackURL: "/candidate/profile",
     });
 
     setIsSubmitting(false);
@@ -121,9 +129,13 @@ export default function CandidateSignupPage() {
     }
 
     setSubmitSuccess(true);
-    router.push("/candidate");
+    router.push("/candidate/profile");
     router.refresh();
   };
+
+  if (session?.user) {
+    return null;
+  }
 
   return (
     <main className="min-h-screen flex flex-col justify-between p-4 sm:p-6 lg:p-8 bg-slate-50 text-[#313638]">
