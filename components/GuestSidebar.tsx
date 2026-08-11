@@ -9,18 +9,18 @@ export default function GuestSidebar() {
 
   const navItems = [
     { label: "Browse Jobs", href: "/jobs", icon: Briefcase },
-    { label: "Log In", href: "/auth", icon: LogIn },
-    { label: "Sign Up", href: "/auth", icon: UserPlus },
+    { label: "Sign In", href: "/auth", icon: LogIn },
+    { label: "Create Account", href: "/auth", icon: UserPlus },
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 shrink-0 min-h-screen flex flex-col">
-      <div className="p-6 border-b border-slate-100">
+    <aside className="w-64 bg-white border-r border-[#E2E8F0] shrink-0 min-h-screen flex flex-col">
+      <div className="p-5 border-b border-[#F1F5F9]">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-[#0E103D] text-white flex items-center justify-center font-bold text-xs shadow-xs">
+          <div className="w-7 h-7 rounded-lg bg-[#6366F1] text-white flex items-center justify-center font-bold text-xs shadow-xs">
             <Briefcase className="w-3.5 h-3.5" />
           </div>
-          <span className="text-base font-bold tracking-tight text-[#0E103D]">
+          <span className="text-base font-bold tracking-tight text-[#0F172A]">
             Talentry
           </span>
         </Link>
@@ -35,13 +35,13 @@ export default function GuestSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
                 isActive
-                  ? "bg-[#008DD5]/10 text-[#008DD5] border-l-4 border-[#008DD5] font-semibold"
-                  : "text-[#313638] hover:bg-slate-100 hover:text-[#0E103D]"
+                  ? "bg-[#EEF2FF] text-[#6366F1] font-semibold"
+                  : "text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A]"
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? "text-[#008DD5]" : "text-[#313638]/70"}`} />
+              <Icon className={`w-4 h-4 ${isActive ? "text-[#6366F1]" : "text-[#64748B]"}`} />
               <span>{item.label}</span>
             </Link>
           );

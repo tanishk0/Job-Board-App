@@ -9,9 +9,9 @@ export default function EditJobForm({ job }: { job: any }) {
     <form action={updateJob} className="w-full max-w-4xl mx-auto py-4">
       <input type="hidden" name="id" value={job.id} />
       <Card className="space-y-6">
-        <div className="border-b border-slate-100 pb-4">
-          <h1 className="text-2xl font-bold text-[#0E103D]">Edit Job Posting</h1>
-          <p className="text-xs text-[#313638]/70 mt-1">
+        <div className="border-b border-[#F1F5F9] pb-4">
+          <h1 className="text-2xl font-bold text-[#0F172A]">Edit Job Posting</h1>
+          <p className="text-xs text-[#64748B] mt-1">
             Update the listing details, requirements, or salary for {job.title}.
           </p>
         </div>
@@ -25,7 +25,7 @@ export default function EditJobForm({ job }: { job: any }) {
               name="title"
               id="title"
               defaultValue={job.title}
-              placeholder="e.g. Frontend Developer"
+              placeholder="e.g. Senior Full Stack Engineer"
               required
             />
           </div>
@@ -37,19 +37,19 @@ export default function EditJobForm({ job }: { job: any }) {
             name="location"
             id="location"
             defaultValue={job.location ?? ""}
-            placeholder="e.g. Delhi / Remote / Hybrid"
+            placeholder="e.g. Bangalore / Remote / Hybrid"
           />
 
           {/* Job Type */}
           <div className="space-y-1.5 w-full">
-            <label htmlFor="jobType" className="block text-sm font-medium text-[#0E103D]">
+            <label htmlFor="jobType" className="block text-xs font-semibold uppercase tracking-wider text-[#475569]">
               Job Type
             </label>
             <select
               name="jobType"
               id="jobType"
               defaultValue={job.jobType ?? "full-time"}
-              className="w-full px-3.5 py-2 text-sm text-[#313638] bg-white border border-slate-200 rounded-lg shadow-xs focus:outline-none focus:ring-2 focus:ring-[#008DD5] focus:border-transparent transition-colors cursor-pointer"
+              className="w-full h-10 px-3.5 text-sm text-[#0F172A] bg-white border border-[#E2E8F0] rounded-lg shadow-xs focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-colors cursor-pointer"
             >
               <option value="full-time">Full-time</option>
               <option value="part-time">Part-time</option>
@@ -60,14 +60,14 @@ export default function EditJobForm({ job }: { job: any }) {
 
           {/* Experience Level */}
           <div className="space-y-1.5 w-full">
-            <label htmlFor="experienceLevel" className="block text-sm font-medium text-[#0E103D]">
+            <label htmlFor="experienceLevel" className="block text-xs font-semibold uppercase tracking-wider text-[#475569]">
               Experience Level
             </label>
             <select
               name="experienceLevel"
               id="experienceLevel"
               defaultValue={job.experienceLevel ?? "mid"}
-              className="w-full px-3.5 py-2 text-sm text-[#313638] bg-white border border-slate-200 rounded-lg shadow-xs focus:outline-none focus:ring-2 focus:ring-[#008DD5] focus:border-transparent transition-colors cursor-pointer"
+              className="w-full h-10 px-3.5 text-sm text-[#0F172A] bg-white border border-[#E2E8F0] rounded-lg shadow-xs focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-colors cursor-pointer"
             >
               <option value="fresher">Fresher</option>
               <option value="junior">Junior</option>
@@ -83,12 +83,12 @@ export default function EditJobForm({ job }: { job: any }) {
             name="salary"
             id="salary"
             defaultValue={job.salary ?? ""}
-            placeholder="e.g. ₹6–8 LPA or Negotiable"
+            placeholder="e.g. ₹25–35 LPA"
           />
 
           {/* Description */}
           <div className="sm:col-span-2 space-y-1.5">
-            <label htmlFor="description" className="block text-sm font-medium text-[#0E103D]">
+            <label htmlFor="description" className="block text-xs font-semibold uppercase tracking-wider text-[#475569]">
               Job Description
             </label>
             <textarea
@@ -96,14 +96,14 @@ export default function EditJobForm({ job }: { job: any }) {
               id="description"
               rows={4}
               defaultValue={job.description}
-              placeholder="What the role is about..."
-              className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-[#313638] focus:outline-none focus:ring-2 focus:ring-[#008DD5] focus:border-transparent transition-colors resize-y"
+              placeholder="Overview of position responsibilities and team context..."
+              className="w-full px-3.5 py-2.5 bg-white border border-[#E2E8F0] rounded-lg text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-colors resize-y"
             ></textarea>
           </div>
 
           {/* Requirements */}
           <div className="sm:col-span-2 space-y-1.5">
-            <label htmlFor="requirements" className="block text-sm font-medium text-[#0E103D]">
+            <label htmlFor="requirements" className="block text-xs font-semibold uppercase tracking-wider text-[#475569]">
               Requirements & Technical Qualifications
             </label>
             <textarea
@@ -111,14 +111,14 @@ export default function EditJobForm({ job }: { job: any }) {
               id="requirements"
               rows={4}
               defaultValue={job.requirements}
-              placeholder="Skills, qualifications, experience required..."
-              className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-[#313638] focus:outline-none focus:ring-2 focus:ring-[#008DD5] focus:border-transparent transition-colors resize-y"
+              placeholder="Technical stack requirements, domain experience, degree requirements..."
+              className="w-full px-3.5 py-2.5 bg-white border border-[#E2E8F0] rounded-lg text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-colors resize-y"
             ></textarea>
           </div>
 
           {/* Responsibilities */}
           <div className="sm:col-span-2 space-y-1.5">
-            <label htmlFor="responsibilities" className="block text-sm font-medium text-[#0E103D]">
+            <label htmlFor="responsibilities" className="block text-xs font-semibold uppercase tracking-wider text-[#475569]">
               Key Responsibilities
             </label>
             <textarea
@@ -126,13 +126,13 @@ export default function EditJobForm({ job }: { job: any }) {
               id="responsibilities"
               rows={4}
               defaultValue={job.responsibilities}
-              placeholder="Day-to-day work responsibilities..."
-              className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-[#313638] focus:outline-none focus:ring-2 focus:ring-[#008DD5] focus:border-transparent transition-colors resize-y"
+              placeholder="Day-to-day duties and core deliverables..."
+              className="w-full px-3.5 py-2.5 bg-white border border-[#E2E8F0] rounded-lg text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-colors resize-y"
             ></textarea>
           </div>
         </div>
 
-        <div className="pt-4 border-t border-slate-100 flex justify-end gap-3">
+        <div className="pt-4 border-t border-[#F1F5F9] flex justify-end gap-3">
           <Link href="/employer/jobs">
             <Button type="button" variant="outline" size="md">
               Cancel

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { Briefcase, ArrowLeft, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { Briefcase, ArrowLeft, CheckCircle2, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
@@ -64,8 +64,6 @@ export default function CandidateSignupPage() {
         error = "Password is required";
       } else if (value.length < 8) {
         error = "Password must be at least 8 characters long";
-      } else if (!/\d/.test(value)) {
-        error = "Password must contain at least one number";
       }
     }
 
@@ -113,24 +111,29 @@ export default function CandidateSignupPage() {
     setIsSubmitting(true);
     setServerError("");
 
-    const { error } = await authClient.signUp.email({
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      role: "candidate",
-      callbackURL: "/candidate/profile",
-    });
+    try {
+      const { error } = await authClient.signUp.email({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: "candidate",
+        callbackURL: "/candidate/profile",
+      });
 
-    setIsSubmitting(false);
+      setIsSubmitting(false);
 
-    if (error) {
-      setServerError(error.message || "Failed to create account. Please try again.");
-      return;
+      if (error) {
+        setServerError(error.message || "Failed to create account. Please try again.");
+        return;
+      }
+
+      setSubmitSuccess(true);
+      router.push("/candidate/profile");
+      router.refresh();
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setServerError(err.message || "An unexpected error occurred. Please check network connectivity.");
     }
-
-    setSubmitSuccess(true);
-    router.push("/candidate/profile");
-    router.refresh();
   };
 
   if (session?.user) {
@@ -138,157 +141,127 @@ export default function CandidateSignupPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col justify-between p-4 sm:p-6 lg:p-8 bg-slate-50 text-[#313638]">
+    <main className="min-h-screen flex flex-col justify-between p-4 sm:p-6 lg:p-8 bg-[#F8FAFC] text-[#0F172A] font-sans">
       {/* Header Bar */}
       <div className="max-w-6xl w-full mx-auto flex items-center justify-between py-2">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#0E103D] text-white flex items-center justify-center font-bold">
+          <div className="w-8 h-8 rounded-lg bg-[#6366F1] text-white flex items-center justify-center font-bold">
             <Briefcase className="w-4 h-4" />
           </div>
-          <span className="text-lg font-bold tracking-tight text-[#0E103D]">Talentry</span>
+          <span className="text-lg font-bold tracking-tight text-[#0F172A]">Talentry</span>
         </Link>
-        <Link href="/auth" className="inline-flex items-center gap-1.5 text-xs font-medium text-[#313638]/70 hover:text-[#008DD5]">
+        <Link href="/auth" className="inline-flex items-center gap-1.5 text-xs font-medium text-[#64748B] hover:text-[#6366F1]">
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Switch Account Type</span>
         </Link>
       </div>
 
       {/* Main Form Card */}
-      <div className="w-full max-w-md bg-white border border-slate-200 rounded-xl p-8 shadow-xs mx-auto my-auto">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold tracking-tight text-[#0E103D]">
+      <div className="w-full max-w-md bg-white border border-[#E2E8F0] rounded-xl p-6 sm:p-8 shadow-[0_1px_3px_rgba(15,23,42,0.04)] mx-auto my-auto space-y-6">
+        <div className="text-center space-y-1">
+          <h1 className="text-2xl font-bold tracking-tight text-[#0F172A]">
             Create Candidate Account
           </h1>
-          <p className="text-xs text-[#313638]/70 mt-1">
-            Join to discover top career opportunities
+          <p className="text-xs text-[#64748B]">
+            Sign up to discover opportunities, upload your CV, and apply directly.
           </p>
         </div>
 
+        {serverError && (
+          <div className="p-3 bg-[#FEF2F2] border border-[#FCA5A5] rounded-lg flex items-center gap-2 text-xs text-[#DC2626]">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{serverError}</span>
+          </div>
+        )}
+
         {submitSuccess ? (
           <div className="text-center py-6 space-y-4">
-            <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mx-auto border border-emerald-200">
+            <div className="w-12 h-12 bg-[#DCFCE7] text-[#16A34A] rounded-xl flex items-center justify-center mx-auto border border-[#BBF7D0]">
               <CheckCircle2 className="w-6 h-6" />
             </div>
-            <h2 className="text-lg font-semibold text-[#0E103D]">Account Created!</h2>
-            <p className="text-xs text-[#313638]/70">
-              Welcome aboard, <span className="font-semibold text-[#0E103D]">{formData.name}</span>. Redirecting to your dashboard...
+            <h2 className="text-lg font-semibold text-[#0F172A]">Account Created!</h2>
+            <p className="text-xs text-[#64748B]">
+              Redirecting to set up your candidate profile...
             </p>
-            <Button onClick={() => router.push("/candidate")} variant="primary" size="md" className="w-full">
-              Go to Dashboard
+            <Button onClick={() => router.push("/candidate/profile")} variant="primary" size="md" className="w-full">
+              Set Up Profile
             </Button>
           </div>
         ) : (
-          <>
-            {serverError && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-xs font-medium">
-                {serverError}
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            <Input
+              label="Full Name"
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              onBlur={() => handleBlur("name")}
+              placeholder="Jane Doe"
+              error={touched.name ? errors.name : undefined}
+            />
+
+            <Input
+              label="Email Address"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              onBlur={() => handleBlur("email")}
+              placeholder="jane@example.com"
+              error={touched.email ? errors.email : undefined}
+            />
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569]">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  onBlur={() => handleBlur("password")}
+                  placeholder="••••••••"
+                  className={`w-full h-10 px-3.5 text-sm text-[#0F172A] bg-white border border-[#E2E8F0] rounded-lg shadow-xs placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-colors ${
+                    errors.password && touched.password ? "border-[#EF4444]" : ""
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#94A3B8] hover:text-[#0F172A]"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
-            )}
-
-            {/* Google Signup Button */}
-            <button
-              type="button"
-              onClick={async () => {
-                await authClient.signIn.social({
-                  provider: "google",
-                  callbackURL: "/candidate",
-                });
-              }}
-              className="w-full flex items-center justify-center gap-3 py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg font-medium text-xs text-[#313638] transition-colors shadow-xs"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
-                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.25 21.3 7.31 24 12 24z" />
-                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.17 0 9.99 0 12s.46 3.83 1.26 5.42l4.02-3.15z" />
-                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.7 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
-              </svg>
-              <span>Continue with Google</span>
-            </button>
-
-            {/* Divider */}
-            <div className="relative my-5 flex items-center justify-center">
-              <div className="border-t border-slate-200 w-full"></div>
-              <span className="bg-white px-3 text-[11px] text-slate-400 uppercase font-semibold tracking-wider relative">
-                or sign up with email
-              </span>
+              {errors.password && touched.password && (
+                <p className="text-xs text-[#EF4444] font-medium">{errors.password}</p>
+              )}
             </div>
 
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-              <Input
-                label="Full Name"
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                onBlur={() => handleBlur("name")}
-                placeholder="John Doe"
-                error={touched.name ? errors.name : undefined}
-              />
-
-              <Input
-                label="Email Address"
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                onBlur={() => handleBlur("email")}
-                placeholder="candidate@example.com"
-                error={touched.email ? errors.email : undefined}
-              />
-
-              <div className="space-y-1.5">
-                <label className="block text-sm font-medium text-[#0E103D]">
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    onBlur={() => handleBlur("password")}
-                    placeholder="••••••••"
-                    className={`w-full px-3.5 py-2 text-sm text-[#313638] bg-white border border-slate-200 rounded-lg shadow-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#008DD5] focus:border-transparent transition-colors ${
-                      errors.password && touched.password ? "border-red-500" : ""
-                    }`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-                {errors.password && touched.password && (
-                  <p className="text-xs text-red-600 font-medium">{errors.password}</p>
-                )}
-              </div>
-
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                variant="primary"
-                size="md"
-                className="w-full mt-2"
-              >
-                {isSubmitting ? "Creating Account..." : "Sign Up"}
-              </Button>
-            </form>
-          </>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              variant="primary"
+              size="md"
+              className="w-full mt-2"
+            >
+              {isSubmitting ? "Creating Account..." : "Create Account"}
+            </Button>
+          </form>
         )}
 
-        <div className="mt-6 text-center text-xs text-[#313638]/70">
+        <div className="text-center text-xs text-[#64748B]">
           Already have an account?{" "}
-          <Link href="/auth/candidate/login" className="text-[#008DD5] font-semibold hover:underline">
-            Log in
+          <Link href="/auth/candidate/login" className="text-[#6366F1] font-semibold hover:underline">
+            Log In
           </Link>
         </div>
       </div>
 
-      <div className="max-w-6xl w-full mx-auto text-center py-2 text-xs text-slate-400">
-        © {new Date().getFullYear()} Talentry. All rights reserved.
+      <div className="max-w-6xl w-full mx-auto text-center py-2 text-xs text-[#94A3B8]">
+        © {new Date().getFullYear()} Talentry Inc. All rights reserved.
       </div>
     </main>
   );

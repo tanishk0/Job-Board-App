@@ -1,69 +1,196 @@
 import Link from "next/link";
-import { UserCircle, Briefcase, FileText, Bookmark, ArrowRight } from "lucide-react";
+import {
+  UserCircle,
+  Briefcase,
+  FileText,
+  Bookmark,
+  ArrowRight,
+  Clock,
+  CheckCircle2,
+  TrendingUp,
+  Compass,
+  Bell,
+  Award,
+} from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { db } from "@/lib/db";
+import { applications, jobPostings, candidateProfiles } from "@/db/schema";
+import { eq, desc } from "drizzle-orm";
 
 export default async function CandidateDashboardPage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const userId = session?.user?.id;
+
+  let myApplications: any[] = [];
+
+  if (userId) {
+    myApplications = await db
+      .select({
+        id: applications.id,
+        status: applications.status,
+        appliedAt: applications.appliedAt,
+        jobId: applications.jobId,
+        jobTitle: jobPostings.title,
+        companyName: jobPostings.employerId,
+        location: jobPostings.location,
+        salary: jobPostings.salary,
+      })
+      .from(applications)
+      .leftJoin(jobPostings, eq(applications.jobId, jobPostings.id))
+      .where(eq(applications.candidateId, userId))
+      .orderBy(desc(applications.appliedAt))
+      .limit(5);
+  }
+
   return (
-    <div className="max-w-5xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-[#0E103D] tracking-tight">Candidate Overview</h1>
-        <p className="text-[#313638]/70 text-sm mt-1">Welcome back! Manage your candidate profile and active job applications.</p>
+    <div className="space-y-8">
+      {/* Dashboard Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#F1F5F9] pb-5">
+        <div>
+          <h1 className="text-2xl font-bold text-[#0F172A] tracking-tight">
+            Candidate Dashboard
+          </h1>
+          <p className="text-xs sm:text-sm text-[#64748B] mt-0.5">
+            Welcome back, {session?.user?.name || "Candidate"}! Track your job applications and career progress.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          <Link href="/jobs">
+            <Button variant="primary" size="sm">
+              <Briefcase className="w-3.5 h-3.5" />
+              <span>Browse Jobs</span>
+            </Button>
+          </Link>
+          <Link href="/candidate/profile">
+            <Button variant="outline" size="sm">
+              <UserCircle className="w-3.5 h-3.5" />
+              <span>Edit Profile</span>
+            </Button>
+          </Link>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-        <Link href="/candidate/profile" className="block">
-          <Card className="hover:border-[#008DD5]/50 transition-colors flex flex-col justify-between space-y-4 group">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-[#008DD5]/10 text-[#008DD5] flex items-center justify-center">
-                <UserCircle className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className="font-semibold text-[#0E103D] group-hover:text-[#008DD5] transition-colors">Profile & Resume</h2>
-                <p className="text-xs text-[#313638]/70 mt-1">View and edit your resume, bio, and skills</p>
-              </div>
-            </div>
-            <span className="text-xs font-semibold text-[#008DD5] inline-flex items-center gap-1">
-              <span>View Profile</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-            </span>
-          </Card>
-        </Link>
+      {/* KPI Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <Card className="space-y-2">
+          <div className="flex items-center justify-between text-xs font-semibold text-[#64748B]">
+            <span>Active Applications</span>
+            <FileText className="w-4 h-4 text-[#6366F1]" />
+          </div>
+          <div className="text-2xl font-bold text-[#0F172A]">{myApplications.length}</div>
+          <p className="text-[11px] text-[#16A34A] font-medium flex items-center gap-1">
+            <TrendingUp className="w-3 h-3" />
+            <span>Updated recently</span>
+          </p>
+        </Card>
 
-        <Link href="/jobs" className="block">
-          <Card className="hover:border-[#008DD5]/50 transition-colors flex flex-col justify-between space-y-4 group">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-[#0E103D]/10 text-[#0E103D] flex items-center justify-center">
-                <Briefcase className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className="font-semibold text-[#0E103D] group-hover:text-[#008DD5] transition-colors">Browse Jobs</h2>
-                <p className="text-xs text-[#313638]/70 mt-1">Search and filter active position listings</p>
-              </div>
-            </div>
-            <span className="text-xs font-semibold text-[#008DD5] inline-flex items-center gap-1">
-              <span>Explore Listings</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-            </span>
-          </Card>
-        </Link>
+        <Card className="space-y-2">
+          <div className="flex items-center justify-between text-xs font-semibold text-[#64748B]">
+            <span>Interviews Scheduled</span>
+            <Clock className="w-4 h-4 text-[#D97706]" />
+          </div>
+          <div className="text-2xl font-bold text-[#0F172A]">2</div>
+          <p className="text-[11px] text-[#64748B]">Next: Technical Round</p>
+        </Card>
 
-        <Link href="/candidate/applications" className="block">
-          <Card className="hover:border-[#008DD5]/50 transition-colors flex flex-col justify-between space-y-4 group">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-[#008DD5]/10 text-[#008DD5] flex items-center justify-center">
-                <FileText className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className="font-semibold text-[#0E103D] group-hover:text-[#008DD5] transition-colors">My Applications</h2>
-                <p className="text-xs text-[#313638]/70 mt-1">Track application status and responses</p>
-              </div>
+        <Card className="space-y-2">
+          <div className="flex items-center justify-between text-xs font-semibold text-[#64748B]">
+            <span>Profile Completeness</span>
+            <Award className="w-4 h-4 text-[#16A34A]" />
+          </div>
+          <div className="text-2xl font-bold text-[#0F172A]">90%</div>
+          <p className="text-[11px] text-[#6366F1] font-medium">Add portfolio link (+10%)</p>
+        </Card>
+
+        <Card className="space-y-2">
+          <div className="flex items-center justify-between text-xs font-semibold text-[#64748B]">
+            <span>Job Alerts</span>
+            <Bell className="w-4 h-4 text-[#6366F1]" />
+          </div>
+          <div className="text-2xl font-bold text-[#0F172A]">3 Active</div>
+          <p className="text-[11px] text-[#64748B]">Matching senior engineering</p>
+        </Card>
+      </div>
+
+      {/* Main Grid Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column: Recent Applications */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-white border border-[#E2E8F0] rounded-xl p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04)] space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#F1F5F9]">
+              <h2 className="text-base font-bold text-[#0F172A]">Recent Applications</h2>
+              <Link href="/candidate/applications" className="text-xs font-semibold text-[#6366F1] hover:underline">
+                View All →
+              </Link>
             </div>
-            <span className="text-xs font-semibold text-[#008DD5] inline-flex items-center gap-1">
-              <span>Track Status</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-            </span>
+
+            {myApplications.length === 0 ? (
+              <div className="text-center py-8 space-y-3">
+                <FileText className="w-8 h-8 text-[#94A3B8] mx-auto" />
+                <p className="text-xs text-[#64748B]">You haven't submitted any job applications yet.</p>
+                <Link href="/jobs">
+                  <Button variant="primary" size="sm">
+                    Browse Positions
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {myApplications.map((app) => (
+                  <div
+                    key={app.id}
+                    className="p-4 rounded-lg border border-[#E2E8F0] hover:border-[#6366F1]/40 flex items-center justify-between gap-4 transition-colors"
+                  >
+                    <div className="space-y-1">
+                      <h3 className="text-sm font-semibold text-[#0F172A]">{app.jobTitle || "Engineering Position"}</h3>
+                      <p className="text-xs text-[#64748B] flex items-center gap-2">
+                        <span>{app.companyName || "Tech Company"}</span>
+                        <span>•</span>
+                        <span>Applied {new Date(app.appliedAt).toLocaleDateString()}</span>
+                      </p>
+                    </div>
+                    <Badge variant={app.status === "hired" ? "success" : app.status === "rejected" ? "danger" : "primary"}>
+                      {app.status || "Applied"}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right Column: Quick Navigation */}
+        <div className="space-y-6">
+          <Card className="space-y-4">
+            <h3 className="text-base font-bold text-[#0F172A] pb-3 border-b border-[#F1F5F9]">Quick Navigation</h3>
+            <div className="space-y-2 text-xs">
+              <Link href="/candidate/applications" className="flex items-center justify-between p-2.5 rounded-lg hover:bg-[#F8FAFC] font-medium text-[#475569] hover:text-[#6366F1]">
+                <span>Application Tracking</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link href="/candidate/saved-jobs" className="flex items-center justify-between p-2.5 rounded-lg hover:bg-[#F8FAFC] font-medium text-[#475569] hover:text-[#6366F1]">
+                <span>Saved Jobs</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link href="/candidate/documents" className="flex items-center justify-between p-2.5 rounded-lg hover:bg-[#F8FAFC] font-medium text-[#475569] hover:text-[#6366F1]">
+                <span>Resume & CV Files</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link href="/candidate/recommendations" className="flex items-center justify-between p-2.5 rounded-lg hover:bg-[#F8FAFC] font-medium text-[#475569] hover:text-[#6366F1]">
+                <span>Recommended Jobs</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </Card>
-        </Link>
+        </div>
       </div>
     </div>
   );

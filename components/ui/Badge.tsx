@@ -1,21 +1,23 @@
 import React from "react";
 
 interface BadgeProps {
-  variant?: "primary" | "brand" | "neutral" | "success" | "warning" | "danger";
+  variant?: "primary" | "brand" | "neutral" | "success" | "warning" | "danger" | "info";
   children: React.ReactNode;
   className?: string;
 }
 
 export function Badge({ variant = "primary", children, className = "" }: BadgeProps) {
-  const baseStyles = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-medium border";
+  const baseStyles =
+    "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border";
 
   const variantStyles = {
-    primary: "bg-[#008DD5]/10 text-[#008DD5] border-[#008DD5]/20",
-    brand: "bg-[#0E103D]/10 text-[#0E103D] border-[#0E103D]/20",
-    neutral: "bg-slate-100 text-[#313638] border-slate-200",
-    success: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    warning: "bg-amber-50 text-amber-700 border-amber-200",
-    danger: "bg-red-50 text-red-700 border-red-200",
+    primary: "bg-[#EEF2FF] text-[#6366F1] border-[#C7D2FE]",
+    brand: "bg-[#F5F3FF] text-[#4F46E5] border-[#DDD6FE]",
+    neutral: "bg-[#F1F5F9] text-[#475569] border-[#E2E8F0]",
+    success: "bg-[#DCFCE7] text-[#16A34A] border-[#BBF7D0]",
+    warning: "bg-[#FEF3C7] text-[#D97706] border-[#FDE68A]",
+    danger: "bg-[#FEE2E2] text-[#DC2626] border-[#FCA5A5]",
+    info: "bg-[#DBEAFE] text-[#2563EB] border-[#BFDBFE]",
   };
 
   return <span className={`${baseStyles} ${variantStyles[variant]} ${className}`}>{children}</span>;

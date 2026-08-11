@@ -15,20 +15,25 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008DD5] focus-visible:ring-offset-1 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
+    "inline-flex items-center justify-center font-medium rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:ring-offset-1 disabled:opacity-50 disabled:pointer-events-none cursor-pointer active:scale-[0.99]";
 
   const sizeStyles = {
-    sm: "px-3 py-1.5 text-xs gap-1.5",
-    md: "px-4 py-2 text-sm gap-2",
-    lg: "px-5 py-2.5 text-base gap-2.5",
+    sm: "h-8 px-3 text-xs gap-1.5",
+    md: "h-10 px-4 text-sm gap-2",
+    lg: "h-12 px-5 text-base gap-2.5",
   };
 
   const variantStyles = {
-    primary: "bg-[#008DD5] text-white hover:bg-[#0076b3] active:bg-[#006093] shadow-xs",
-    secondary: "bg-[#0E103D] text-white hover:bg-[#191d5a] active:bg-[#080927] shadow-xs",
-    outline: "bg-white text-[#313638] border border-slate-200 hover:bg-slate-50 hover:text-[#0E103D] active:bg-slate-100 shadow-xs",
-    danger: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-xs",
-    ghost: "text-[#313638] hover:bg-slate-100 hover:text-[#0E103D] active:bg-slate-200/70",
+    primary:
+      "bg-[#6366F1] text-white hover:bg-[#5558E8] active:bg-[#4F46E5] shadow-xs",
+    secondary:
+      "bg-white text-[#0F172A] border border-[#E2E8F0] hover:bg-[#F8FAFC] hover:border-[#CBD5E1] active:bg-[#F1F5F9] shadow-xs",
+    outline:
+      "bg-transparent text-[#475569] border border-[#E2E8F0] hover:bg-[#F8FAFC] hover:text-[#0F172A] shadow-xs",
+    danger:
+      "bg-[#EF4444] text-white hover:bg-[#DC2626] active:bg-[#B91C1C] shadow-xs",
+    ghost:
+      "text-[#475569] hover:bg-[#F1F5F9] hover:text-[#0F172A]",
   };
 
   return (

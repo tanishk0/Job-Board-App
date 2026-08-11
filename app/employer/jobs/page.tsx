@@ -10,6 +10,7 @@ import { Users, PlusCircle, Briefcase, Trash2, Edit3 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 export default async function Jobs() {
   const jobs = await getEmployerJobs();
@@ -22,7 +23,7 @@ export default async function Jobs() {
   }
 
   if (session.user.role !== "employer") {
-    throw new Error("Forbidden(Account Role Mismatched)");
+    throw new Error("Forbidden (Account Role Mismatch)");
   }
 
   const employerProfile = await db
@@ -34,24 +35,13 @@ export default async function Jobs() {
   if (employerProfile.length === 0) {
     return (
       <div className="max-w-4xl mx-auto py-8">
-        <Card className="text-center space-y-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 mx-auto flex items-center justify-center border border-amber-200">
-            <Briefcase className="w-6 h-6" />
-          </div>
-          <h1 className="text-xl font-bold text-[#0E103D]">
-            Complete your employer profile
-          </h1>
-          <p className="text-xs text-[#313638]/70 max-w-md mx-auto">
-            You need to create an employer profile before posting job opportunities.
-          </p>
-          <div className="pt-2">
-            <Link href="/employer/profile">
-              <Button variant="primary" size="md">
-                Create Employer Profile
-              </Button>
-            </Link>
-          </div>
-        </Card>
+        <EmptyState
+          icon={Briefcase}
+          title="Complete Your Company Profile"
+          description="Create your employer profile first before publishing open position listings to candidates."
+          actionLabel="Create Employer Profile"
+          actionHref="/employer/profile"
+        />
       </div>
     );
   }
@@ -72,10 +62,10 @@ export default async function Jobs() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E2E8F0]">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#0E103D] tracking-tight">Your Job Postings</h1>
-          <p className="text-xs sm:text-sm text-[#313638]/70 mt-1">Manage active job listings and review applicant candidate pipelines.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#0F172A] tracking-tight">Your Job Postings</h1>
+          <p className="text-xs sm:text-sm text-[#64748B] mt-1">Manage active listings and applicant candidate pipelines.</p>
         </div>
         <Link href="/employer/jobs/new">
           <Button variant="primary" size="sm">
@@ -87,42 +77,34 @@ export default async function Jobs() {
 
       <div className="space-y-4">
         {jobs.length === 0 ? (
-          <Card className="text-center py-12 space-y-3">
-            <div className="w-12 h-12 rounded-xl bg-slate-100 text-[#0E103D] mx-auto flex items-center justify-center border border-slate-200">
-              <Briefcase className="w-6 h-6" />
-            </div>
-            <h2 className="text-lg font-bold text-[#0E103D]">No active job postings</h2>
-            <p className="text-xs text-[#313638]/70">You haven't posted any jobs yet. Create your first listing to start receiving applications.</p>
-            <div className="pt-2">
-              <Link href="/employer/jobs/new">
-                <Button variant="primary" size="md">
-                  <PlusCircle className="w-4 h-4" />
-                  <span>Create First Job</span>
-                </Button>
-              </Link>
-            </div>
-          </Card>
+          <EmptyState
+            icon={Briefcase}
+            title="No active job postings"
+            description="You haven't posted any open positions yet. Create your first listing to start receiving applications."
+            actionLabel="Create First Job"
+            actionHref="/employer/jobs/new"
+          />
         ) : (
           jobs.map((job) => {
             const applicantCount = countsMap.get(job.id) || 0;
             return (
               <Card
                 key={job.id}
-                className="hover:border-[#008DD5]/40 transition-colors space-y-4"
+                className="hover:border-[#6366F1]/40 transition-colors space-y-4"
               >
                 <div className="flex justify-between items-start gap-4">
                   <div className="space-y-1">
-                    <h2 className="text-lg font-bold text-[#0E103D]">{job.title}</h2>
-                    <p className="text-xs text-[#313638]/70 font-medium">{job.location || "Remote"}</p>
+                    <h2 className="text-lg font-bold text-[#0F172A]">{job.title}</h2>
+                    <p className="text-xs text-[#64748B] font-medium">{job.location || "Remote"}</p>
                   </div>
                   <Badge variant="brand" className="uppercase text-[10px]">
                     {job.jobType || "Full-Time"}
                   </Badge>
                 </div>
 
-                <p className="text-xs text-[#313638]/80 leading-relaxed line-clamp-2">{job.description}</p>
+                <p className="text-xs text-[#475569] leading-relaxed line-clamp-2">{job.description}</p>
 
-                <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                <div className="flex items-center gap-2 text-xs text-[#64748B] font-medium">
                   {job.experienceLevel && (
                     <Badge variant="neutral" className="capitalize">
                       Exp: {job.experienceLevel}
@@ -135,10 +117,10 @@ export default async function Jobs() {
                   )}
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100">
-                  <Link href={`/employer/jobs/${job.id}/applicants`}>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-[#F1F5F9]">
+                  <Link href={`/employer/jobs/${job.id}`}>
                     <Button variant="secondary" size="sm">
-                      <Users className="w-4 h-4 text-[#008DD5]" />
+                      <Users className="w-4 h-4 text-[#6366F1]" />
                       <span>View Applicants ({applicantCount})</span>
                     </Button>
                   </Link>

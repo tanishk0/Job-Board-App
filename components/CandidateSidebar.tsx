@@ -3,7 +3,21 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { UserCircle, Briefcase, FileText, Bookmark, LogOut } from "lucide-react";
+import {
+  LayoutDashboard,
+  Briefcase,
+  FileText,
+  Bookmark,
+  Bell,
+  Compass,
+  UserCircle,
+  FolderDown,
+  TrendingUp,
+  Award,
+  Settings,
+  LogOut,
+  ChevronRight,
+} from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
 export default function CandidateSidebar() {
@@ -23,53 +37,94 @@ export default function CandidateSidebar() {
     });
   };
 
-  const navItems = [
-    { label: "Profile", href: "/candidate/profile", icon: UserCircle },
-    { label: "Browse Jobs", href: "/jobs", icon: Briefcase },
-    { label: "My Applications", href: "/candidate/applications", icon: FileText },
-    { label: "Saved Jobs", href: "/candidate/saved-jobs", icon: Bookmark },
+  const navSections = [
+    {
+      title: "Core Portal",
+      items: [
+        { label: "Dashboard", href: "/candidate", icon: LayoutDashboard },
+        { label: "Find Opportunities", href: "/jobs", icon: Briefcase },
+        { label: "My Applications", href: "/candidate/applications", icon: FileText },
+        { label: "Saved Jobs", href: "/candidate/saved-jobs", icon: Bookmark },
+        { label: "Job Alerts", href: "/candidate/alerts", icon: Bell },
+        { label: "Recommended", href: "/candidate/recommendations", icon: Compass },
+      ],
+    },
+    {
+      title: "Career & Profile",
+      items: [
+        { label: "Candidate Profile", href: "/candidate/profile", icon: UserCircle },
+        { label: "Resume & Documents", href: "/candidate/documents", icon: FolderDown },
+        { label: "Career Insights", href: "/candidate/insights", icon: TrendingUp },
+        { label: "Skill Verifications", href: "/candidate/skills", icon: Award },
+        { label: "Notifications", href: "/candidate/notifications", icon: Bell },
+        { label: "Account Settings", href: "/candidate/settings", icon: Settings },
+      ],
+    },
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 shrink-0 min-h-screen flex flex-col">
-      <div className="p-6 border-b border-slate-100">
-        <h2 className="text-lg font-bold text-[#0E103D] tracking-tight">Candidate Portal</h2>
+    <aside className="w-64 bg-white border-r border-[#E2E8F0] shrink-0 min-h-screen flex flex-col justify-between">
+      <div>
+        {/* Sidebar Header */}
+        <div className="p-5 border-b border-[#F1F5F9] flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-[#6366F1] text-white flex items-center justify-center font-bold text-xs">
+              <Briefcase className="w-4 h-4" />
+            </div>
+            <span className="font-bold text-[#0F172A] tracking-tight">Talentry</span>
+          </Link>
+          <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-[#EEF2FF] text-[#6366F1] border border-[#C7D2FE]">
+            Candidate
+          </span>
+        </div>
+
+        {/* Navigation Groups */}
+        <div className="p-3 space-y-6">
+          {navSections.map((section, idx) => (
+            <div key={idx} className="space-y-1">
+              <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-[#94A3B8]">
+                {section.title}
+              </p>
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                const isActive =
+                  pathname === item.href || (item.href !== "/jobs" && item.href !== "/candidate" && pathname.startsWith(item.href));
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`group flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                      isActive
+                        ? "bg-[#EEF2FF] text-[#6366F1] font-semibold"
+                        : "text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A]"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Icon className={`w-4 h-4 ${isActive ? "text-[#6366F1]" : "text-[#64748B]"}`} />
+                      <span>{item.label}</span>
+                    </div>
+                    {isActive && <ChevronRight className="w-3.5 h-3.5 text-[#6366F1]" />}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
+        </div>
       </div>
 
-      <nav className="px-3 py-4 space-y-1 flex-1">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href || (item.href !== "/jobs" && pathname.startsWith(item.href));
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                isActive
-                  ? "bg-[#008DD5]/10 text-[#008DD5] border-l-4 border-[#008DD5] font-semibold"
-                  : "text-[#313638] hover:bg-slate-100 hover:text-[#0E103D]"
-              }`}
-            >
-              <Icon className={`w-4 h-4 ${isActive ? "text-[#008DD5]" : "text-[#313638]/70"}`} />
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
-
-      <div className="p-3 border-t border-slate-200 mt-auto">
+      {/* Logout Action Footer */}
+      <div className="p-3 border-t border-[#E2E8F0]">
         <button
           type="button"
           onClick={handleLogout}
           disabled={isLoggingOut}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors disabled:opacity-50 cursor-pointer"
+          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-[#EF4444] hover:bg-[#FEE2E2]/60 hover:text-[#DC2626] transition-colors disabled:opacity-50 cursor-pointer"
         >
-          <LogOut className="w-4 h-4 text-red-600" />
+          <LogOut className="w-4 h-4 text-[#EF4444]" />
           <span>{isLoggingOut ? "Logging out..." : "Log Out"}</span>
         </button>
       </div>
     </aside>
   );
 }
-

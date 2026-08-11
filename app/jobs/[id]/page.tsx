@@ -7,7 +7,6 @@ import { eq, and } from "drizzle-orm";
 import {
   MapPin,
   Bookmark,
-  Share2,
   Briefcase,
   Building2,
   DollarSign,
@@ -16,7 +15,7 @@ import {
   Send,
   FileText,
   ListChecks,
-  Sparkles,
+  Layers,
   LogIn,
   Users,
 } from "lucide-react";
@@ -44,15 +43,15 @@ export default async function JobDetailPage({
 
   if (!job) {
     return (
-      <div className="min-h-screen flex flex-col bg-slate-50 text-[#313638]">
+      <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A]">
         <Navbar session={session} />
         <main className="flex-1 flex items-center justify-center p-6">
-          <div className="max-w-md w-full bg-white border border-slate-200 rounded-xl p-8 text-center space-y-4 shadow-xs">
-            <div className="w-12 h-12 rounded-xl bg-red-50 text-red-600 mx-auto flex items-center justify-center border border-red-200">
+          <div className="max-w-md w-full bg-white border border-[#E2E8F0] rounded-xl p-8 text-center space-y-4 shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
+            <div className="w-12 h-12 rounded-xl bg-[#FEE2E2] text-[#DC2626] mx-auto flex items-center justify-center border border-[#FCA5A5]">
               <Briefcase className="w-6 h-6" />
             </div>
-            <h1 className="text-xl font-bold text-[#0E103D]">Job Not Found</h1>
-            <p className="text-sm text-[#313638]/70">
+            <h1 className="text-xl font-bold text-[#0F172A]">Job Not Found</h1>
+            <p className="text-sm text-[#64748B]">
               The job listing you are looking for does not exist or may have been removed.
             </p>
             <Link href="/jobs">
@@ -102,7 +101,7 @@ export default async function JobDetailPage({
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-[#313638] font-sans selection:bg-[#008DD5]/10 selection:text-[#008DD5]">
+    <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A] font-sans">
       {/* Top Navigation Bar */}
       <Navbar session={session} />
 
@@ -111,30 +110,30 @@ export default async function JobDetailPage({
         {/* Back Link */}
         <Link
           href="/jobs"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#313638]/70 hover:text-[#008DD5] transition-colors group"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#64748B] hover:text-[#6366F1] transition-colors group"
         >
           <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
           <span>Back to All Jobs</span>
         </Link>
 
         {/* Main Job Detail Banner */}
-        <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-xs space-y-6">
+        <div className="bg-white border border-[#E2E8F0] rounded-xl p-6 sm:p-8 shadow-[0_1px_3px_rgba(15,23,42,0.04)] space-y-6">
           {/* Header Row: Title + Logo */}
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pb-6 border-b border-slate-100">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pb-6 border-b border-[#F1F5F9]">
             <div className="space-y-3 flex-1">
               <Badge variant="brand" className="uppercase text-[10px] tracking-wider">
-                <Sparkles className="w-3 h-3" />
+                <Briefcase className="w-3 h-3" />
                 <span>{job.jobType || "Full-Time"}</span>
               </Badge>
 
-              <h1 className="text-2xl sm:text-4xl font-bold text-[#0E103D] tracking-tight leading-tight">
+              <h1 className="text-2xl sm:text-4xl font-bold text-[#0F172A] tracking-tight leading-tight">
                 {job.title}
               </h1>
 
-              <div className="flex items-center gap-2 text-[#313638] font-medium text-base">
-                <Building2 className="w-4 h-4 text-[#008DD5]" />
+              <div className="flex items-center gap-2 text-[#475569] font-medium text-base">
+                <Building2 className="w-4 h-4 text-[#6366F1]" />
                 <span>{job.companyName}</span>
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
               </div>
             </div>
 
@@ -143,11 +142,11 @@ export default async function JobDetailPage({
               <img
                 src={job.companyLogoUrl}
                 alt={job.companyName}
-                className="w-16 h-16 rounded-lg border border-slate-200 object-contain p-1.5 bg-white shadow-xs shrink-0"
+                className="w-16 h-16 rounded-lg border border-[#E2E8F0] object-contain p-1.5 bg-white shadow-xs shrink-0"
               />
             ) : (
-              <div className="w-16 h-16 rounded-lg border border-slate-200 bg-[#0E103D]/5 text-[#0E103D] flex items-center justify-center font-bold text-xl shrink-0">
-                {job.companyName?.slice(0, 2).toUpperCase() || "JB"}
+              <div className="w-16 h-16 rounded-lg border border-[#E2E8F0] bg-[#EEF2FF] text-[#6366F1] flex items-center justify-center font-bold text-xl shrink-0">
+                {job.companyName?.slice(0, 2).toUpperCase() || "TL"}
               </div>
             )}
           </div>
@@ -156,7 +155,7 @@ export default async function JobDetailPage({
           <div className="flex flex-wrap items-center gap-2.5 text-xs font-medium">
             {job.location && (
               <Badge variant="neutral">
-                <MapPin className="w-3.5 h-3.5 text-[#008DD5]" />
+                <MapPin className="w-3.5 h-3.5 text-[#6366F1]" />
                 <span>{job.location}</span>
               </Badge>
             )}
@@ -170,7 +169,7 @@ export default async function JobDetailPage({
 
             {job.experienceLevel && (
               <Badge variant="primary">
-                <Sparkles className="w-3.5 h-3.5 text-[#008DD5]" />
+                <Layers className="w-3.5 h-3.5 text-[#6366F1]" />
                 <span className="capitalize">{job.experienceLevel}</span>
               </Badge>
             )}
@@ -184,7 +183,7 @@ export default async function JobDetailPage({
           </div>
 
           {/* Quick Actions Row */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-100">
+          <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-[#F1F5F9]">
             <div className="flex items-center gap-3 w-full sm:w-auto">
               {!session ? (
                 <Link href="/auth" className="w-full sm:w-auto">
@@ -195,7 +194,7 @@ export default async function JobDetailPage({
                 </Link>
               ) : session.user.role === "employer" ? (
                 <div className="flex items-center gap-3">
-                  <span className="text-xs text-slate-500">You are an employer for this job.</span>
+                  <span className="text-xs text-[#64748B]">You are an employer for this job.</span>
                   <Link href={`/employer/jobs/${job.id}/applicants`}>
                     <Button variant="secondary" size="md">
                       <Users className="w-4 h-4" />
@@ -204,8 +203,8 @@ export default async function JobDetailPage({
                   </Link>
                 </div>
               ) : hasApplied ? (
-                <div className="inline-flex items-center gap-2 px-3.5 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg font-medium text-xs">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <div className="inline-flex items-center gap-2 px-3.5 py-2 bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0] rounded-lg font-medium text-xs">
+                  <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
                   <span>Application Submitted ({appliedApplication?.status || "Pending"})</span>
                 </div>
               ) : (
@@ -238,29 +237,29 @@ export default async function JobDetailPage({
           {/* Main Details Column */}
           <div className="lg:col-span-2 space-y-6">
             {/* About this Job */}
-            <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-xs space-y-4">
-              <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100">
-                <div className="w-8 h-8 rounded-lg bg-[#008DD5]/10 text-[#008DD5] flex items-center justify-center">
+            <div className="bg-white border border-[#E2E8F0] rounded-xl p-6 sm:p-8 shadow-[0_1px_3px_rgba(15,23,42,0.04)] space-y-4">
+              <div className="flex items-center gap-2.5 pb-3 border-b border-[#F1F5F9]">
+                <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#6366F1] flex items-center justify-center">
                   <FileText className="w-4 h-4" />
                 </div>
-                <h2 className="text-lg font-bold text-[#0E103D]">About this job</h2>
+                <h2 className="text-lg font-bold text-[#0F172A]">About this job</h2>
               </div>
 
-              <div className="text-[#313638] text-sm leading-relaxed whitespace-pre-line pt-1">
+              <div className="text-[#475569] text-sm leading-relaxed whitespace-pre-line pt-1">
                 {job.description || "No description provided."}
               </div>
             </div>
 
             {/* Job Requirements */}
-            <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-xs space-y-4">
-              <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100">
-                <div className="w-8 h-8 rounded-lg bg-[#0E103D]/10 text-[#0E103D] flex items-center justify-center">
-                  <ListChecks className="w-4 h-4 text-[#0E103D]" />
+            <div className="bg-white border border-[#E2E8F0] rounded-xl p-6 sm:p-8 shadow-[0_1px_3px_rgba(15,23,42,0.04)] space-y-4">
+              <div className="flex items-center gap-2.5 pb-3 border-b border-[#F1F5F9]">
+                <div className="w-8 h-8 rounded-lg bg-[#F5F3FF] text-[#4F46E5] flex items-center justify-center">
+                  <ListChecks className="w-4 h-4" />
                 </div>
-                <h2 className="text-lg font-bold text-[#0E103D]">Job Requirements</h2>
+                <h2 className="text-lg font-bold text-[#0F172A]">Job Requirements</h2>
               </div>
 
-              <div className="text-[#313638] text-sm leading-relaxed whitespace-pre-line pt-1">
+              <div className="text-[#475569] text-sm leading-relaxed whitespace-pre-line pt-1">
                 {job.requirements || "No requirements specified."}
               </div>
             </div>
@@ -268,11 +267,11 @@ export default async function JobDetailPage({
             {/* Application Section */}
             <div id="application-form">
               {!session ? (
-                <div className="bg-[#0E103D] text-white rounded-xl p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6 border border-[#0E103D]">
+                <div className="bg-[#0F172A] text-white rounded-xl p-6 sm:p-8 shadow-md flex flex-col sm:flex-row items-center justify-between gap-6 border border-[#1E293B]">
                   <div className="space-y-1 text-center sm:text-left">
                     <h3 className="text-lg font-bold text-white">Interested in this role?</h3>
-                    <p className="text-xs text-slate-300">
-                      Log in to your candidate account to submit your application directly to {job.companyName}.
+                    <p className="text-xs text-[#94A3B8]">
+                      Sign in to your candidate account to submit your application directly to {job.companyName}.
                     </p>
                   </div>
                   <Link href="/auth">
@@ -283,8 +282,8 @@ export default async function JobDetailPage({
                   </Link>
                 </div>
               ) : session.user.role === "employer" ? (
-                <div className="bg-slate-100 border border-slate-200 rounded-xl p-6 text-[#313638] flex items-center justify-between">
-                  <p className="text-xs text-slate-600">You are logged in as an employer.</p>
+                <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-6 text-[#0F172A] flex items-center justify-between">
+                  <p className="text-xs text-[#64748B]">You are logged in as an employer.</p>
                   <Link href={`/employer/jobs/${job.id}/applicants`}>
                     <Button variant="secondary" size="sm">
                       <Users className="w-4 h-4" />
@@ -293,26 +292,26 @@ export default async function JobDetailPage({
                   </Link>
                 </div>
               ) : hasApplied ? (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                <div className="bg-[#DCFCE7] border border-[#BBF7D0] rounded-xl p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-[#16A34A] text-white flex items-center justify-center shrink-0">
                       <CheckCircle2 className="w-5 h-5" />
                     </div>
                     <div className="space-y-1">
-                      <h3 className="text-base font-bold text-emerald-950">Application Submitted</h3>
-                      <p className="text-xs text-emerald-800">
+                      <h3 className="text-base font-bold text-[#14532D]">Application Submitted</h3>
+                      <p className="text-xs text-[#166534]">
                         Submitted on{" "}
                         <span className="font-semibold">
                           {appliedApplication?.appliedAt ? new Date(appliedApplication.appliedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "recently"}
                         </span>
                       </p>
-                      <p className="text-xs text-emerald-700">
-                        Status: <span className="uppercase font-bold tracking-wide px-2 py-0.5 bg-emerald-100 rounded text-emerald-900">{appliedApplication?.status || "pending"}</span>
+                      <p className="text-xs text-[#15803D]">
+                        Status: <span className="uppercase font-bold tracking-wide px-2 py-0.5 bg-[#DCFCE7] rounded text-[#14532D] border border-[#BBF7D0]">{appliedApplication?.status || "pending"}</span>
                       </p>
                     </div>
                   </div>
                   <Link href="/candidate/applications">
-                    <Button variant="primary" size="sm" className="bg-emerald-600 hover:bg-emerald-700">
+                    <Button variant="primary" size="sm" className="bg-[#16A34A] hover:bg-[#15803D]">
                       View My Applications
                     </Button>
                   </Link>
@@ -331,9 +330,9 @@ export default async function JobDetailPage({
           {/* Right Sidebar Column */}
           <div className="space-y-6">
             {/* Company Overview Card */}
-            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4">
-              <h3 className="text-base font-bold text-[#0E103D] pb-3 border-b border-slate-100 flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-[#008DD5]" />
+            <div className="bg-white border border-[#E2E8F0] rounded-xl p-6 shadow-[0_1px_3px_rgba(15,23,42,0.04)] space-y-4">
+              <h3 className="text-base font-bold text-[#0F172A] pb-3 border-b border-[#F1F5F9] flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-[#6366F1]" />
                 Company Overview
               </h3>
 
@@ -342,37 +341,37 @@ export default async function JobDetailPage({
                   <img
                     src={job.companyLogoUrl}
                     alt={job.companyName}
-                    className="w-10 h-10 rounded-lg border border-slate-200 object-contain p-1 bg-white"
+                    className="w-10 h-10 rounded-lg border border-[#E2E8F0] object-contain p-1 bg-white"
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-lg border border-slate-200 bg-[#0E103D]/5 text-[#0E103D] flex items-center justify-center font-bold text-sm">
-                    {job.companyName?.slice(0, 2).toUpperCase() || "JB"}
+                  <div className="w-10 h-10 rounded-lg border border-[#E2E8F0] bg-[#EEF2FF] text-[#6366F1] flex items-center justify-center font-bold text-sm">
+                    {job.companyName?.slice(0, 2).toUpperCase() || "TL"}
                   </div>
                 )}
                 <div>
-                  <h4 className="font-bold text-sm text-[#0E103D]">{job.companyName}</h4>
-                  <p className="text-[11px] text-slate-500">Verified Employer</p>
+                  <h4 className="font-bold text-sm text-[#0F172A]">{job.companyName}</h4>
+                  <p className="text-[11px] text-[#64748B]">Verified Employer</p>
                 </div>
               </div>
 
-              <div className="space-y-2 pt-2 text-xs text-[#313638]">
-                <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
-                  <span className="text-slate-500">Location</span>
-                  <span className="font-medium text-[#0E103D]">{job.location || "Remote"}</span>
+              <div className="space-y-2 pt-2 text-xs text-[#475569]">
+                <div className="flex items-center justify-between py-1.5 border-b border-[#F1F5F9]">
+                  <span className="text-[#64748B]">Location</span>
+                  <span className="font-medium text-[#0F172A]">{job.location || "Remote"}</span>
                 </div>
 
-                <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
-                  <span className="text-slate-500">Job Type</span>
-                  <span className="font-medium text-[#0E103D]">{job.jobType || "Full-Time"}</span>
+                <div className="flex items-center justify-between py-1.5 border-b border-[#F1F5F9]">
+                  <span className="text-[#64748B]">Job Type</span>
+                  <span className="font-medium text-[#0F172A]">{job.jobType || "Full-Time"}</span>
                 </div>
 
-                <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
-                  <span className="text-slate-500">Experience</span>
-                  <span className="font-medium text-[#0E103D]">{job.experienceLevel || "Not specified"}</span>
+                <div className="flex items-center justify-between py-1.5 border-b border-[#F1F5F9]">
+                  <span className="text-[#64748B]">Experience</span>
+                  <span className="font-medium text-[#0F172A]">{job.experienceLevel || "Not specified"}</span>
                 </div>
 
                 <div className="flex items-center justify-between py-1.5">
-                  <span className="text-slate-500">Salary</span>
+                  <span className="text-[#64748B]">Salary</span>
                   <span className="font-bold text-emerald-600">{job.salary || "Competitive"}</span>
                 </div>
               </div>
