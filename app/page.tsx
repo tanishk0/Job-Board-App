@@ -13,9 +13,14 @@ import {
   Briefcase,
   FileCheck,
   Layers,
+  MapPin,
+  DollarSign,
 } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { db } from "@/lib/db";
+import { employerProfiles, jobPostings } from "@/db/schema";
+import { desc, eq } from "drizzle-orm";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/Button";
@@ -34,6 +39,31 @@ export default async function Home() {
   const employerDashboardHref = isEmployer ? "/employer" : "/auth/employer/login";
   const postJobHref = isEmployer ? "/employer/jobs/new" : "/auth/employer/login";
   const candidateDashboardHref = isCandidate ? "/candidate" : "/auth/candidate/login";
+
+  const verifiedCompanies = await db
+    .select({
+      id: employerProfiles.id,
+      name: employerProfiles.companyName,
+      logoUrl: employerProfiles.companyLogoUrl,
+    })
+    .from(employerProfiles)
+    .limit(8);
+
+  const recentJobs = await db
+    .select({
+      id: jobPostings.id,
+      title: jobPostings.title,
+      salary: jobPostings.salary,
+      jobType: jobPostings.jobType,
+      experienceLevel: jobPostings.experienceLevel,
+      location: jobPostings.location,
+      companyName: employerProfiles.companyName,
+      companyLogoUrl: employerProfiles.companyLogoUrl,
+    })
+    .from(jobPostings)
+    .leftJoin(employerProfiles, eq(jobPostings.employerId, employerProfiles.userId))
+    .orderBy(desc(jobPostings.createdAt))
+    .limit(3);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A]">
@@ -101,21 +131,106 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Trusted Companies Banner */}
-        <section className="border-y border-[#E2E8F0] bg-white py-8 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto space-y-4 text-center">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
-              Trusted by high-growth startups and tech leaders
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-70 grayscale hover:grayscale-0 transition-all">
-              {["Stripe", "Vercel", "Figma", "Linear", "Supabase", "Retool"].map((company) => (
-                <span key={company} className="text-base sm:text-lg font-bold text-[#0F172A]">
-                  {company}
-                </span>
+        {/* Verified Companies Banner from Database */}
+        {verifiedCompanies.length > 0 && (
+          <section className="border-y border-[#E2E8F0] bg-white py-8 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto space-y-4 text-center">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
+                Hiring partners actively recruiting on Talentry
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
+                {verifiedCompanies.map((company) => (
+                  <Link
+                    key={company.id}
+                    href={`/jobs?q=${encodeURIComponent(company.name)}`}
+                    className="flex items-center gap-2 text-base sm:text-lg font-bold text-[#0F172A] hover:text-[#6366F1] transition-colors"
+                  >
+                    {company.logoUrl && (
+                      <img
+                        src={company.logoUrl}
+                        alt={company.name}
+                        className="w-6 h-6 object-contain rounded"
+                      />
+                    )}
+                    <span>{company.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Recent Openings from Database */}
+        {recentJobs.length > 0 && (
+          <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <div>
+                <Badge variant="primary">Latest Opportunities</Badge>
+                <h2 className="text-2xl sm:text-3xl font-bold text-[#0F172A] tracking-tight mt-1">
+                  Recently Posted Roles
+                </h2>
+                <p className="text-xs sm:text-sm text-[#64748B]">
+                  Verified openings posted directly by hiring teams.
+                </p>
+              </div>
+              <Link href="/jobs">
+                <Button variant="ghost" size="sm">
+                  <span>Browse All Positions</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Button>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {recentJobs.map((job) => (
+                <Link key={job.id} href={`/jobs/${job.id}`} className="block group">
+                  <Card className="h-full flex flex-col justify-between space-y-4 hover:border-[#6366F1]/50 transition-all">
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <Badge variant="brand" className="uppercase text-[10px]">
+                          {job.jobType || "Full-Time"}
+                        </Badge>
+                        {job.salary && (
+                          <Badge variant="success" className="text-[10px]">
+                            {job.salary}
+                          </Badge>
+                        )}
+                      </div>
+
+                      <div>
+                        <h3 className="text-base font-bold text-[#0F172A] group-hover:text-[#6366F1] transition-colors line-clamp-1">
+                          {job.title}
+                        </h3>
+                        <p className="text-xs text-[#64748B] font-medium mt-0.5">
+                          {job.companyName || "Tech Employer"}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-[#64748B]">
+                        {job.location && (
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-[#6366F1]" />
+                            <span>{job.location}</span>
+                          </span>
+                        )}
+                        {job.experienceLevel && (
+                          <span className="capitalize">
+                            • {job.experienceLevel}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="pt-3 border-t border-[#F1F5F9] flex items-center justify-between text-xs font-semibold text-[#6366F1]">
+                      <span>View Details</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </Card>
+                </Link>
               ))}
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* How Talentry Works Section */}
         <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
