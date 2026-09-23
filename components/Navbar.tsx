@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Briefcase, LayoutDashboard, ArrowRight, Menu, X, Building2, DollarSign, BookOpen } from "lucide-react";
+import { Briefcase, LayoutDashboard, ArrowRight, Menu, X, Building2, DollarSign } from "lucide-react";
 import { Button } from "./ui/Button";
 
 interface NavbarProps {
@@ -45,9 +45,6 @@ export function Navbar({ session }: NavbarProps) {
           </Link>
           <Link href="/salaries" className="hover:text-[#6366F1] transition-colors">
             Salaries
-          </Link>
-          <Link href="/resources" className="hover:text-[#6366F1] transition-colors">
-            Resources
           </Link>
           <Link href={candidateDashboardHref} className="hover:text-[#6366F1] transition-colors">
             For Candidates
@@ -119,14 +116,6 @@ export function Navbar({ session }: NavbarProps) {
             >
               <DollarSign className="w-4 h-4" />
               <span>Salaries</span>
-            </Link>
-            <Link
-              href="/resources"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-[#F8FAFC] hover:text-[#6366F1]"
-            >
-              <BookOpen className="w-4 h-4" />
-              <span>Resources</span>
             </Link>
             <Link
               href={candidateDashboardHref}

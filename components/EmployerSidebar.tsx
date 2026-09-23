@@ -8,9 +8,7 @@ import {
   Briefcase,
   Users,
   UserRoundSearch,
-  BookmarkCheck,
   PlusCircle,
-  MessageSquare,
   BarChart3,
   UserCircle,
   Users2,
@@ -48,13 +46,11 @@ export default function EmployerSidebar() {
         { label: "Post New Job", href: "/employer/jobs/new", icon: PlusCircle },
         { label: "All Applicants", href: "/employer/applications", icon: Users },
         { label: "Search Candidates", href: "/employer/candidates", icon: UserRoundSearch },
-        { label: "Saved Talent Pool", href: "/employer/talent-pool", icon: BookmarkCheck },
       ],
     },
     {
       title: "Company Management",
       items: [
-        { label: "Candidate Messages", href: "/employer/messages", icon: MessageSquare },
         { label: "Hiring Analytics", href: "/employer/analytics", icon: BarChart3 },
         { label: "Company Profile", href: "/employer/profile", icon: UserCircle },
         { label: "Team Members", href: "/employer/team", icon: Users2 },
