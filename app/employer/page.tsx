@@ -9,7 +9,6 @@ import {
   ArrowRight,
   TrendingUp,
   Users,
-  Eye,
   CheckCircle2,
   Clock,
   BarChart2,
@@ -19,8 +18,8 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { db } from "@/lib/db";
-import { jobPostings, applications, employerProfiles } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { jobPostings, applications } from "@/db/schema";
+import { eq, desc, count } from "drizzle-orm";
 
 export default async function EmployerDashboardPage() {
   const session = await auth.api.getSession({
@@ -35,8 +34,20 @@ export default async function EmployerDashboardPage() {
 
   let activeJobs: any[] = [];
   let recentApplicants: any[] = [];
+  let activeJobsCount = 0;
+  let totalApplicantsCount = 0;
+  let inReviewCount = 0;
+  let hiresCount = 0;
 
   if (userId) {
+    // 1. Total jobs count
+    const [jobsCountRow] = await db
+      .select({ count: count(jobPostings.id) })
+      .from(jobPostings)
+      .where(eq(jobPostings.employerId, userId));
+    activeJobsCount = Number(jobsCountRow?.count) || 0;
+
+    // 2. Active recent job postings
     activeJobs = await db
       .select()
       .from(jobPostings)
@@ -44,6 +55,30 @@ export default async function EmployerDashboardPage() {
       .orderBy(desc(jobPostings.createdAt))
       .limit(5);
 
+    // 3. Total applicants count
+    const [totalAppsRow] = await db
+      .select({ count: count(applications.id) })
+      .from(applications)
+      .innerJoin(jobPostings, eq(applications.jobId, jobPostings.id))
+      .where(eq(jobPostings.employerId, userId));
+    totalApplicantsCount = Number(totalAppsRow?.count) || 0;
+
+    // 4. In review & hires breakdown
+    const allEmployerApps = await db
+      .select({ status: applications.status })
+      .from(applications)
+      .innerJoin(jobPostings, eq(applications.jobId, jobPostings.id))
+      .where(eq(jobPostings.employerId, userId));
+
+    inReviewCount = allEmployerApps.filter(
+      (a) => a.status === "reviewed" || a.status === "shortlisted" || a.status === "interviewing"
+    ).length;
+
+    hiresCount = allEmployerApps.filter(
+      (a) => a.status === "hired" || a.status === "accepted"
+    ).length;
+
+    // 5. Recent applicants
     recentApplicants = await db
       .select({
         id: applications.id,
@@ -67,7 +102,7 @@ export default async function EmployerDashboardPage() {
             Good morning, {session.user.name || "Employer"}
           </h1>
           <p className="text-xs sm:text-sm text-[#64748B] mt-0.5">
-            Here is what is happening across your active job postings and hiring pipelines today.
+            Real-time pipeline metrics and applicant updates across your active positions.
           </p>
         </div>
 
@@ -81,17 +116,16 @@ export default async function EmployerDashboardPage() {
         </div>
       </div>
 
-      {/* KPI Performance Cards */}
+      {/* Real KPI Metrics Cards from DB */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <Card className="space-y-2">
           <div className="flex items-center justify-between text-xs font-semibold text-[#64748B]">
             <span>Active Job Openings</span>
             <Briefcase className="w-4 h-4 text-[#6366F1]" />
           </div>
-          <div className="text-2xl font-bold text-[#0F172A]">{activeJobs.length || 4}</div>
-          <p className="text-[11px] text-[#16A34A] font-medium flex items-center gap-1">
-            <TrendingUp className="w-3 h-3" />
-            <span>+2 new this week</span>
+          <div className="text-2xl font-bold text-[#0F172A]">{activeJobsCount}</div>
+          <p className="text-[11px] text-[#64748B] font-medium">
+            {activeJobsCount > 0 ? "Published on Talentry" : "No active postings"}
           </p>
         </Card>
 
@@ -100,22 +134,20 @@ export default async function EmployerDashboardPage() {
             <span>Total Applicants</span>
             <Users className="w-4 h-4 text-[#6366F1]" />
           </div>
-          <div className="text-2xl font-bold text-[#0F172A]">248</div>
-          <p className="text-[11px] text-[#16A34A] font-medium flex items-center gap-1">
-            <TrendingUp className="w-3 h-3" />
-            <span>+18% from last week</span>
+          <div className="text-2xl font-bold text-[#0F172A]">{totalApplicantsCount}</div>
+          <p className="text-[11px] text-[#64748B] font-medium">
+            Across all open positions
           </p>
         </Card>
 
         <Card className="space-y-2">
           <div className="flex items-center justify-between text-xs font-semibold text-[#64748B]">
-            <span>Company Profile Views</span>
-            <Eye className="w-4 h-4 text-[#3B82F6]" />
+            <span>Under Active Review</span>
+            <Clock className="w-4 h-4 text-[#3B82F6]" />
           </div>
-          <div className="text-2xl font-bold text-[#0F172A]">1.2K</div>
-          <p className="text-[11px] text-[#16A34A] font-medium flex items-center gap-1">
-            <TrendingUp className="w-3 h-3" />
-            <span>+24% from last week</span>
+          <div className="text-2xl font-bold text-[#0F172A]">{inReviewCount}</div>
+          <p className="text-[11px] text-[#64748B] font-medium">
+            Shortlisted or reviewed
           </p>
         </Card>
 
@@ -124,8 +156,10 @@ export default async function EmployerDashboardPage() {
             <span>Hires Completed</span>
             <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
           </div>
-          <div className="text-2xl font-bold text-[#0F172A]">8</div>
-          <p className="text-[11px] text-[#64748B]">Avg 14 days to offer</p>
+          <div className="text-2xl font-bold text-[#0F172A]">{hiresCount}</div>
+          <p className="text-[11px] text-[#64748B] font-medium">
+            {hiresCount > 0 ? "Offers accepted" : "No offers accepted yet"}
+          </p>
         </Card>
       </div>
 
@@ -200,21 +234,14 @@ export default async function EmployerDashboardPage() {
                 href="/employer/applications"
                 className="flex items-center justify-between p-2.5 rounded-lg hover:bg-[#F8FAFC] font-medium text-[#475569] hover:text-[#6366F1]"
               >
-                <span>Central Applicant Kanban</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-              <Link
-                href="/employer/talent-pool"
-                className="flex items-center justify-between p-2.5 rounded-lg hover:bg-[#F8FAFC] font-medium text-[#475569] hover:text-[#6366F1]"
-              >
-                <span>Saved Talent Pool</span>
+                <span>Central Applicant Pipeline</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <Link
                 href="/employer/analytics"
                 className="flex items-center justify-between p-2.5 rounded-lg hover:bg-[#F8FAFC] font-medium text-[#475569] hover:text-[#6366F1]"
               >
-                <span>Performance Analytics</span>
+                <span>Recruitment Analytics</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <Link
